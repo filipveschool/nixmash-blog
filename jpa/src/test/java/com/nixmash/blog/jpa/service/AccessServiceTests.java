@@ -2,6 +2,7 @@ package com.nixmash.blog.jpa.service;
 
 import com.nixmash.blog.jpa.SpringDataTests;
 import com.nixmash.blog.jpa.dto.AccessDTO;
+import com.nixmash.blog.jpa.service.interfaces.AccessService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

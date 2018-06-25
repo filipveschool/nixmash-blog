@@ -2,7 +2,7 @@ package com.nixmash.blog.mvc.controller;
 
 import com.nixmash.blog.jpa.common.ApplicationSettings;
 import com.nixmash.blog.jpa.model.Post;
-import com.nixmash.blog.jpa.service.PostService;
+import com.nixmash.blog.jpa.service.interfaces.PostService;
 import com.nixmash.blog.mvc.AbstractContext;
 import com.nixmash.blog.solr.model.PostDoc;
 import com.nixmash.blog.solr.service.PostDocService;

@@ -15,6 +15,8 @@
  */
 package com.nixmash.blog.solr.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.solr.client.solrj.beans.Field;
 import org.springframework.data.geo.Point;
 import org.springframework.data.solr.core.geo.GeoConverters;
@@ -23,161 +25,80 @@ import org.springframework.data.solr.core.mapping.SolrDocument;
 import java.io.Serializable;
 import java.util.List;
 
+@Getter
+@Setter
 @SolrDocument(solrCoreName = "nixmash")
 public class Product implements Serializable, IProduct {
 
-	private static final long serialVersionUID = -1636370516058761621L;
+    private static final long serialVersionUID = -1636370516058761621L;
 
-	@Field(ID_FIELD)
-	private String id;
+    @Field(ID_FIELD)
+    private String id;
 
-	@Field(NAME_FIELD)
-	private String name;
+    @Field(NAME_FIELD)
+    private String name;
 
-	@Field(FEATURE_FIELD)
-	private List<String> features;
+    @Field(FEATURE_FIELD)
+    private List<String> features;
 
-	@Field(CATEGORY_FIELD)
-	private List<String> categories;
+    @Field(CATEGORY_FIELD)
+    private List<String> categories;
 
-	@Field(WEIGHT_FIELD)
-	private Float weight;
+    @Field(WEIGHT_FIELD)
+    private Float weight;
 
-	@Field(PRICE_FIELD)
-	private Float price;
+    @Field(PRICE_FIELD)
+    private Float price;
 
-	@Field(POPULARITY_FIELD)
-	private Integer popularity;
+    @Field(POPULARITY_FIELD)
+    private Integer popularity;
 
-	@Field(AVAILABLE_FIELD)
-	private boolean available;
+    @Field(AVAILABLE_FIELD)
+    private boolean available;
 
-	@Field(DOCTYPE_FIELD)
-	private String doctype;
+    @Field(DOCTYPE_FIELD)
+    private String doctype;
 
-	@Field(LOCATION_FIELD)
-	private String location;
+    @Field(LOCATION_FIELD)
+    private String location;
 
-	private Point point;
+    private Point point;
 
-	public Product() {}
+    public Product() {
+    }
 
-	public Product(String name) {
-		setName(name);
-	}
+    public Product(String name) {
+        setName(name);
+    }
 
-	public Product(String id, String name) {
-		setId(id);
-		setName(name);
-	}
+    public Product(String id, String name) {
+        setId(id);
+        setName(name);
+    }
 
-	public String getId() {
-		return id;
-	}
+    public Point getPoint() {
+        String _location = this.getLocation();
+        if (this.getLocation() == null)
+            _location = "-1,-1";
+        return GeoConverters.StringToPointConverter.INSTANCE.convert(_location);
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public boolean hasCategories() {
+        return (this.categories != null);
+    }
 
-	public String getName() {
-		return name;
-	}
+    public boolean hasFeatures() {
+        return (this.features != null);
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public boolean hasLocation() {
+        return (this.getLocation() != null);
+    }
 
-	public List<String> getCategories() {
-		return categories;
-	}
-
-	public void setCategories(List<String> categories) {
-		this.categories = categories;
-	}
-
-	public List<String> getFeatures() {
-		return features;
-	}
-
-	public void setFeatures(List<String> features) {
-		this.features = features;
-	}
-
-	public Float getWeight() {
-		return weight;
-	}
-
-	public void setWeight(Float weight) {
-		this.weight = weight;
-	}
-
-	public Float getPrice() {
-		return price;
-	}
-
-	public void setPrice(Float price) {
-		this.price = price;
-	}
-
-	public Integer getPopularity() {
-		return popularity;
-	}
-
-	public void setPopularity(Integer popularity) {
-		this.popularity = popularity;
-	}
-
-	public boolean isAvailable() {
-		return available;
-	}
-
-	public void setAvailable(boolean available) {
-		this.available = available;
-	}
-
-	public String getDoctype() {
-		return doctype;
-	}
-
-	public void setDoctype(String doctype) {
-		this.doctype = doctype;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-	
-	public Point getPoint() {
-		String _location = this.getLocation();
-		if (this.getLocation() == null)
-			_location = "-1,-1";
-		return GeoConverters.StringToPointConverter.INSTANCE.convert(_location);
-	}
-
-	public void setPoint(Point point) {
-		this.point = point;
-	}
-
-	   public boolean hasCategories() {
-	        return (this.categories != null);
-	    }
-	   
-	   public boolean hasFeatures() {
-	        return (this.features != null);
-	    }
-	   
-	   public boolean hasLocation() {
-		   return (this.getLocation() != null);
-	   }
-
-	@Override
-	public String toString() {
-		return "Product [id=" + id + ", name=" + name + ", categories=" + categories + ", features=" + features + ", weight=" + weight + ", price="
-				+ price + ", popularity=" + popularity + ", available=" + available + ", doctype=" + doctype + "]";
-	}
+    @Override
+    public String toString() {
+        return "Product [id=" + id + ", name=" + name + ", categories=" + categories + ", features=" + features + ", weight=" + weight + ", price="
+                + price + ", popularity=" + popularity + ", available=" + available + ", doctype=" + doctype + "]";
+    }
 
 }

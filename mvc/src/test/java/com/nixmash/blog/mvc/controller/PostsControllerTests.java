@@ -1,6 +1,6 @@
 package com.nixmash.blog.mvc.controller;
 
-import com.nixmash.blog.jpa.service.PostService;
+import com.nixmash.blog.jpa.service.interfaces.PostService;
 import com.nixmash.blog.jsoup.service.JsoupService;
 import com.nixmash.blog.mvc.AbstractContext;
 import com.nixmash.blog.mvc.components.WebUI;

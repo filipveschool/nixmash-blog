@@ -11,7 +11,7 @@ import java.util.Properties;
 public class MailSender extends JavaMailSenderImpl {
 
     @Autowired
-    MailSettings mailSettings;
+    private MailSettings mailSettings;
 
     @Override
     public String getHost() {

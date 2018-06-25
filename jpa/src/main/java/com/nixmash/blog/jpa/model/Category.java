@@ -1,11 +1,27 @@
 package com.nixmash.blog.jpa.model;
 
-import javax.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Set;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+@Getter
+@Setter
 @SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 @Table(name = "categories")
@@ -24,11 +40,30 @@ public class Category implements Serializable {
 
     private static final Long serialVersionUID = -5531381747015731447L;
 
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "category_id", nullable = false)
     private Long categoryId;
+
+    @Basic
+    @Column(name = "category_value", nullable = false, length = 50)
     private String categoryValue;
+
+    @OneToMany
+    @JoinTable(name = "post_category_ids",
+            joinColumns = {@JoinColumn(name = "category_id",
+                    referencedColumnName = "category_id")},
+            inverseJoinColumns = {@JoinColumn(name = "post_id",
+                    referencedColumnName = "post_id")})
     private Set<Post> posts;
+
+    @Transient
     private int categoryCount = 0;
+
+    @Column(name = "is_default", nullable = false)
     private Boolean isDefault;
+
+    @Column(name = "is_active", nullable = false)
     private Boolean isActive;
 
     public Category() {
@@ -43,68 +78,6 @@ public class Category implements Serializable {
         this.categoryValue = categoryValue;
         this.isActive = isActive;
         this.isDefault = isDefault;
-    }
-
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "category_id", nullable = false)
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    @Column(name = "is_default", nullable = false)
-    public Boolean getIsDefault() {
-        return isDefault;
-    }
-
-    public void setIsDefault(Boolean isDefault) {
-        this.isDefault = isDefault;
-    }
-
-    @Column(name = "is_active", nullable = false)
-    public Boolean getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(Boolean isActive) {
-        this.isActive = isActive;
-    }
-
-    @Basic
-    @Column(name = "category_value", nullable = false, length = 50)
-    public String getCategoryValue() {
-        return categoryValue;
-    }
-
-    public void setCategoryValue(String categoryValue) {
-        this.categoryValue = categoryValue;
-    }
-
-    @OneToMany
-    @JoinTable(name="post_category_ids",
-            joinColumns={@JoinColumn(name="category_id",
-                    referencedColumnName="category_id")},
-            inverseJoinColumns={@JoinColumn(name="post_id",
-                    referencedColumnName="post_id")})
-    public Set<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts( Set<Post> posts) {
-        this.posts = posts;
-    }
-
-    @Transient
-    public int getCategoryCount() {
-        return categoryCount;
-    }
-
-    public void setCategoryCount(int categoryCount) {
-        this.categoryCount = categoryCount;
     }
 
     @Override

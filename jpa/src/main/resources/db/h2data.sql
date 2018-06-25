@@ -286,10 +286,6 @@ VALUES (2, 1, 'slidetwo.jpg', 'slide two', '2016-08-11 15:02:11', 2);
 INSERT INTO flashcard_slides (slide_id, category_id, slide_image, slide_content, datetime_created, post_id)
 VALUES (3, 1, 'slidethree.jpg', 'slide three', '2016-08-11 15:02:30', 3);
 
-INSERT INTO github_stats (forks, stars, subscribers, followers, stat_date) VALUES (20, 100, 25, 18, '2016-12-01');
-INSERT INTO github_stats (forks, stars, subscribers, followers, stat_date) VALUES (21, 102, 27, 18, '2016-12-02');
-INSERT INTO github_stats (forks, stars, subscribers, followers, stat_date) VALUES (22, 105, 31, 19, '2016-12-03');
-
 insert into post_meta select post_id, 'SUMMARY', '@awesomeblogger', '/x/pics/twitter120x120.jpg', 'na'
                       from posts;
 

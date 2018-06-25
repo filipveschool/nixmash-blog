@@ -1,7 +1,7 @@
 
 
 buildscript {
-	ext { springBootVersion = '1.5.3.RELEASE' }
+	ext { springBootVersion = '1.5.10.RELEASE' }
 	repositories {
 		mavenCentral()
 //		maven { url 'http://repo.spring.io/snapshot' }
@@ -21,6 +21,7 @@ allprojects {
 	apply plugin: 'eclipse'
 	apply plugin: 'org.springframework.boot'
 	apply plugin: 'java'
+	apply plugin: 'maven'
 	apply plugin: 'war'
 
 	sourceCompatibility = 1.8
@@ -47,6 +48,7 @@ allprojects {
 	}
 
 	dependencies {
+		compileOnly('org.projectlombok:lombok:1.18.0')
 		compile 'org.springframework.boot:spring-boot-devtools'
 		compile 'org.springframework.boot:spring-boot-starter-data-jpa'
 		compile 'org.springframework.boot:spring-boot-starter-security'
@@ -106,4 +108,23 @@ allprojects {
 task wrapper(type: Wrapper) {
 	gradleVersion = '3.1'
 	distributionType = 'all'
+}
+
+task writeNewPom << {
+	pom {
+		project {
+			groupId 'org.example'
+			artifactId 'test'
+			version '1.0.0'
+
+			inceptionYear '2008'
+			licenses {
+				license {
+					name 'The Apache Software License, Version 2.0'
+					url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+					distribution 'repo'
+				}
+			}
+		}
+	}.writeTo("$buildDir/newpom.xml")
 }

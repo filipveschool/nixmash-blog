@@ -2,7 +2,7 @@ package com.nixmash.blog.mvc.controller;
 
 import com.nixmash.blog.jpa.model.User;
 import com.nixmash.blog.jpa.model.UserToken;
-import com.nixmash.blog.jpa.service.UserService;
+import com.nixmash.blog.jpa.service.interfaces.UserService;
 import com.nixmash.blog.mvc.AbstractContext;
 import com.nixmash.blog.mvc.components.WebUI;
 import org.junit.Before;

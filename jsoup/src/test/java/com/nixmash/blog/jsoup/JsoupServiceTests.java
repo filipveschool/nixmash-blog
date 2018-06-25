@@ -2,7 +2,7 @@ package com.nixmash.blog.jsoup;
 
 
 import com.nixmash.blog.jpa.common.ApplicationSettings;
-import com.nixmash.blog.jpa.service.PostService;
+import com.nixmash.blog.jpa.service.interfaces.PostService;
 import com.nixmash.blog.jsoup.dto.PagePreviewDTO;
 import com.nixmash.blog.jsoup.service.JsoupService;
 import org.junit.Test;

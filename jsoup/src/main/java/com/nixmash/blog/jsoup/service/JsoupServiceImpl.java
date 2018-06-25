@@ -8,7 +8,7 @@ import com.nixmash.blog.jpa.model.Post;
 import com.nixmash.blog.jpa.model.PostImage;
 import com.nixmash.blog.jpa.model.PostMeta;
 import com.nixmash.blog.jpa.repository.PostMetaRepository;
-import com.nixmash.blog.jpa.service.PostService;
+import com.nixmash.blog.jpa.service.interfaces.PostService;
 import com.nixmash.blog.jpa.utils.PostUtils;
 import com.nixmash.blog.jsoup.base.JsoupHtmlParser;
 import com.nixmash.blog.jsoup.dto.JsoupPostDTO;

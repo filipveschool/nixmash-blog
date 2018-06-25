@@ -6,6 +6,7 @@ import com.nixmash.blog.jpa.enums.ResetPasswordResult;
 import com.nixmash.blog.jpa.model.User;
 import com.nixmash.blog.jpa.model.UserToken;
 import com.nixmash.blog.jpa.repository.UserTokenRepository;
+import com.nixmash.blog.jpa.service.interfaces.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

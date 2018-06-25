@@ -1,9 +1,21 @@
 package com.nixmash.blog.jpa.model;
 
-import javax.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
+@Getter
+@Setter
 /**
  * A profile for a system user.
  */
@@ -16,14 +28,6 @@ public class UserProfile implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long id;
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
 
     @OneToOne
     @PrimaryKeyJoinColumn
@@ -39,11 +43,11 @@ public class UserProfile implements Serializable {
     private String city;
 
     @Column
-    @Size(min=2)
+    @Size(min = 2)
     private String state;
 
     @Column
-    @Size(min=5, max=10)
+    @Size(min = 5, max = 10)
     private String zip;
 
     @Column
@@ -54,62 +58,6 @@ public class UserProfile implements Serializable {
 
     public UserProfile(User user) {
         this.user = user;
-    }
-
-    public User getUser() {
-        return this.user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getAddress2() {
-        return address2;
-    }
-
-    public void setAddress2(String address2) {
-        this.address2 = address2;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getZip() {
-        return zip;
-    }
-
-    public void setZip(String zip) {
-        this.zip = zip;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     @Override

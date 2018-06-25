@@ -1,62 +1,43 @@
 package com.nixmash.blog.jpa.model;
 
-import javax.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * Created by daveburke on 8/7/16.
- */
+@Getter
+@Setter
 @Entity
 @Table(name = "user_tokens")
 public class UserToken {
-    private long tokenId;
-    private User user;
-    private String token;
-    private Timestamp tokenExpiration;
-
-    private static final int EXPIRATION = 60 * 24;
 
     @Id
     @Column(name = "token_id", nullable = false)
-    public long getTokenId() {
-        return tokenId;
-    }
-
-    public void setTokenId(long tokenId) {
-        this.tokenId = tokenId;
-    }
+    private long tokenId;
 
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+    private User user;
 
     @Basic
     @Column(name = "token", nullable = true, length = 255)
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String userToken) {
-        this.token = userToken;
-    }
+    private String token;
 
     @Basic
     @Column(name = "token_expiration", nullable = false)
-    public Timestamp getTokenExpiration() {
-        return tokenExpiration;
-    }
+    private Timestamp tokenExpiration;
 
-    public void setTokenExpiration(Timestamp tokenExpiration) {
-        this.tokenExpiration = tokenExpiration;
-    }
+    private static final int EXPIRATION = 60 * 24;
 
     public UserToken() {
         super();

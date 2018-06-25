@@ -14,17 +14,15 @@ import com.nixmash.blog.jpa.enums.TwitterCardType;
 import com.nixmash.blog.jpa.exceptions.DuplicatePostNameException;
 import com.nixmash.blog.jpa.exceptions.SiteOptionNotFoundException;
 import com.nixmash.blog.jpa.model.BatchJob;
-import com.nixmash.blog.jpa.model.GitHubStats;
 import com.nixmash.blog.jpa.model.Post;
 import com.nixmash.blog.jpa.model.SiteImage;
-import com.nixmash.blog.jpa.service.PostService;
-import com.nixmash.blog.jpa.service.SiteService;
-import com.nixmash.blog.jpa.service.StatService;
-import com.nixmash.blog.jpa.service.UserService;
+import com.nixmash.blog.jpa.service.interfaces.PostService;
+import com.nixmash.blog.jpa.service.interfaces.SiteService;
+import com.nixmash.blog.jpa.service.interfaces.StatService;
+import com.nixmash.blog.jpa.service.interfaces.UserService;
 import com.nixmash.blog.jpa.utils.PostUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.core.env.Environment;
@@ -36,40 +34,38 @@ import java.util.List;
 import static com.nixmash.blog.jpa.utils.SharedUtils.timeMark;
 import static com.nixmash.blog.jpa.utils.SharedUtils.totalTime;
 
+@Slf4j
 @Component
 public class JpaUI {
 
-    private static final Logger logger = LoggerFactory.getLogger(JpaUI.class);
-    
+    @Autowired
+    private PostService postService;
 
-    // region  Beans
+    @Autowired
+    private UserService userService;
 
-    private final PostService postService;
-    private final UserService userService;
-    private final SiteService siteService;
-    private final ApplicationSettings applicationSettings;
-    final DefaultListableBeanFactory beanfactory;
-    private final SiteOptions siteOptions;
-    private final StatService statService;
-    private final Environment environment;
+    @Autowired
+    private SiteService siteService;
+
+    @Autowired
+    private ApplicationSettings applicationSettings;
+    @Autowired
+    DefaultListableBeanFactory beanfactory;
+
+    @Autowired
+    private SiteOptions siteOptions;
+
+    @Autowired
+    private StatService statService;
+
+    @Autowired
+    private Environment environment;
 
     // endregion
 
-    @Autowired
-    public JpaUI(PostService postService, SiteOptions siteOptions, UserService userService, ApplicationSettings applicationSettings, DefaultListableBeanFactory beanfactory, SiteService siteService, StatService statService, Environment environment) {
-        this.postService = postService;
-        this.siteOptions = siteOptions;
-        this.userService = userService;
-        this.applicationSettings = applicationSettings;
-        this.beanfactory = beanfactory;
-        this.siteService = siteService;
-        this.statService = statService;
-        this.environment = environment;
-    }
-
     public void init() {
         String activeProfile = environment.getActiveProfiles()[0];
-        logger.info(String.format("Current JPA Active Profile: %s", activeProfile));
+        log.info(String.format("Current JPA Active Profile: %s", activeProfile));
 
         displaySiteImageInfo();
     }
@@ -86,7 +82,7 @@ public class JpaUI {
 
     private void displayCategoryCounts() {
         List<CategoryDTO> categoryDTOS = postService.getCategoryCounts();
-        for (CategoryDTO categoryDTO : categoryDTOS) {
+        for (CategoryDTO categoryDTO: categoryDTOS) {
             System.out.println(MessageFormat.format("{0} | {1} | {2}",
                     categoryDTO.getCategoryId(), categoryDTO.getCategoryValue(), categoryDTO.getCategoryCount()));
         }
@@ -95,18 +91,9 @@ public class JpaUI {
 
     // region BatchJob Reports and GitHub Stats
 
-    private void getGithubStats() {
-        GitHubStats gitHubStats = statService.getCurrentGitHubStats();
-        if (gitHubStats != null)
-            System.out.println("GitHubStats Lives");
-        else
-            System.out.println("GitHubStats is null");
-    }
-
     private void getBatchJobs() {
-        List<BatchJob> batchJobs = statService.getBatchJobsByJob(BatchJobName.GITHUBSTATS);
-        for (BatchJob batchJob :
-                batchJobs) {
+        List<BatchJob> batchJobs = statService.getBatchJobsByJob(BatchJobName.DEMOJOB);
+        for (BatchJob batchJob: batchJobs) {
             System.out.println(batchJob);
         }
     }
@@ -117,7 +104,7 @@ public class JpaUI {
 
     private void displayPosts() {
         List<Post> posts = postService.getAllPosts();
-        for (Post post : posts) {
+        for (Post post: posts) {
             System.out.println(post.getPostId() + " : " + post.getPostTitle() + " : " + post.getCategory().getCategoryValue());
         }
     }
@@ -160,8 +147,8 @@ public class JpaUI {
     private void generateAlphabet() {
 
         List<AlphabetDTO> alphaLinks = postService.getAlphaLInks();
-        for (AlphabetDTO alphaLink : alphaLinks) {
-            System.out.println(alphaLink.getAlphaCharacter() + " " + alphaLink.getActive());
+        for (AlphabetDTO alphaLink: alphaLinks) {
+            System.out.println(alphaLink.getAlphaCharacter() + " " + alphaLink.getIsActive());
         }
     }
 

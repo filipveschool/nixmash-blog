@@ -1,5 +1,6 @@
 package com.nixmash.blog.jpa.model.auditors;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,9 +15,8 @@ import java.time.ZonedDateTime;
  * https://goo.gl/lY7sT5
  *
  */
+@Slf4j
 public class CurrentTimeDateTimeService implements DateTimeService {
-
-    private static final Logger logger = LoggerFactory.getLogger(CurrentTimeDateTimeService.class);
 
     @Override
     public ZonedDateTime getCurrentDateAndTime() {

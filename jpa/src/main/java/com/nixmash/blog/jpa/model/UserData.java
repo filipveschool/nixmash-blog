@@ -1,12 +1,20 @@
 package com.nixmash.blog.jpa.model;
 
-import javax.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Created by daveburke on 12/19/16.
- */
+@Getter
+@Setter
 @Entity
 @Table(name = "user_data")
 public class UserData implements Serializable {
@@ -49,76 +57,8 @@ public class UserData implements Serializable {
     @Column(name = "ip", length = 25)
     public String ip;
 
-    public long getUserId() {
-        return userId;
-    }
+    public UserData(){
 
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    public int getLoginAttempts() {
-        return loginAttempts;
-    }
-
-    public void setLoginAttempts(int loginAttempts) {
-        this.loginAttempts = loginAttempts;
-    }
-
-    public Date getLastloginDatetime() {
-        return lastloginDatetime;
-    }
-
-    public void setLastloginDatetime(Date lastloginDatetime) {
-        this.lastloginDatetime = lastloginDatetime;
-    }
-
-    public Date getCreatedDatetime() {
-        return createdDatetime;
-    }
-
-    public void setCreatedDatetime(Date createdDatetime) {
-        this.createdDatetime = createdDatetime;
-    }
-
-    public Date getApprovedDatetime() {
-        return approvedDatetime;
-    }
-
-    public void setApprovedDatetime(Date approvedDatetime) {
-        this.approvedDatetime = approvedDatetime;
-    }
-
-    public Date getInvitedDatetime() {
-        return invitedDatetime;
-    }
-
-    public void setInvitedDatetime(Date invitedDatetime) {
-        this.invitedDatetime = invitedDatetime;
-    }
-
-    public Date getAcceptedDatetime() {
-        return acceptedDatetime;
-    }
-
-    public void setAcceptedDatetime(Date acceptedDatetime) {
-        this.acceptedDatetime = acceptedDatetime;
-    }
-
-    public long getInvitedById() {
-        return invitedById;
-    }
-
-    public void setInvitedById(long invitedById) {
-        this.invitedById = invitedById;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
     }
 
     @Override

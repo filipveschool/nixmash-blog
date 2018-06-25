@@ -1,6 +1,6 @@
 package com.nixmash.blog.mvc.controller;
 
-import com.nixmash.blog.mail.service.FmMailService;
+import com.nixmash.blog.mail.service.interfaces.FmMailService;
 import com.nixmash.blog.mvc.AbstractContext;
 import com.nixmash.blog.mvc.components.WebUI;
 import org.junit.Before;

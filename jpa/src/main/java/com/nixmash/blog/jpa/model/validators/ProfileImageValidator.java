@@ -1,8 +1,7 @@
 package com.nixmash.blog.jpa.model.validators;
 
 import com.nixmash.blog.jpa.dto.ProfileImageDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -12,10 +11,9 @@ import javax.imageio.ImageIO;
 import java.io.IOException;
 import java.io.InputStream;
 
+@Slf4j
 @Component
 public class ProfileImageValidator  implements Validator {
-
-    private static final Logger logger = LoggerFactory.getLogger(ProfileImageValidator.class);
 
     @Value("${profile.image.upload.size}")
     private Long imageMaxSize;
@@ -27,7 +25,7 @@ public class ProfileImageValidator  implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        logger.debug("Validating {}", target.toString());
+        log.debug("Validating {}", target.toString());
         ProfileImageDTO profileImage = (ProfileImageDTO) target;
         validateFileType(errors, profileImage);
         validateForMinMaxFileSize(errors, profileImage);

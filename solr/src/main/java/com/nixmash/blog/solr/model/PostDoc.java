@@ -17,6 +17,8 @@ package com.nixmash.blog.solr.model;
 
 import com.nixmash.blog.jpa.model.Tag;
 import com.nixmash.blog.solr.enums.SolrDocType;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.solr.client.solrj.beans.Field;
 import org.jsoup.Jsoup;
 import org.springframework.data.solr.core.mapping.SolrDocument;
@@ -28,6 +30,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Getter
+@Setter
 @SolrDocument(solrCoreName = "nixmash")
 public class PostDoc implements Serializable, IPostDoc {
 
@@ -84,113 +88,6 @@ public class PostDoc implements Serializable, IPostDoc {
 
     // endregion
 
-    // region Getter Setters
-
-    public String getPostId() {
-        return postId;
-    }
-
-    public void setPostId(String postId) {
-        this.postId = postId;
-    }
-
-    public String getPostTitle() {
-        return postTitle;
-    }
-
-    public void setPostTitle(String postTitle) {
-        this.postTitle = postTitle;
-    }
-
-    public String getPostAuthor() {
-        return postAuthor;
-    }
-
-    public void setPostAuthor(String postAuthor) {
-        this.postAuthor = postAuthor;
-    }
-
-    public String getPostName() {
-        return postName;
-    }
-
-    public void setPostName(String postName) {
-        this.postName = postName;
-    }
-
-    public String getPostLink() {
-        return postLink;
-    }
-
-    public void setPostLink(String postLink) {
-        this.postLink = postLink;
-    }
-
-    public Date getPostDate() {
-        return postDate;
-    }
-
-    public void setPostDate(Date postDate) {
-        this.postDate = postDate;
-    }
-
-    public String getPostType() {
-        return postType;
-    }
-
-    public void setPostType(String postType) {
-        this.postType = postType;
-    }
-
-    public String getPostHTML() {
-        return postHTML;
-    }
-
-    public void setPostHTML(String postHTML) {
-        this.postHTML = postHTML;
-    }
-
-    public String getPostText() {
-        return postText;
-    }
-
-    public void setPostText(String postText) {
-        this.postText = postText;
-    }
-
-    public String getPostSource() {
-        return postSource;
-    }
-
-    public void setPostSource(String postSource) {
-        this.postSource = postSource;
-    }
-
-    public List<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
-
-    public String getDocType() {
-        return docType;
-    }
-
-    public void setDocType(String docType) {
-        this.docType = docType;
-    }
-
-    public String getRangeDate() {
-        return rangeDate;
-    }
-
-    public void setRangeDate(String rangeDate) {
-        this.rangeDate = rangeDate;
-    }
-
-// endregion
 
     // region toString
 

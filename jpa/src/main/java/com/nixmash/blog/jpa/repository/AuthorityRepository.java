@@ -9,6 +9,9 @@ import java.util.Collection;
 public interface AuthorityRepository extends CrudRepository<Authority, Long> {
 
     Authority findByAuthority(String authority);
+
     Collection<Authority> findAll() throws DataAccessException;
+
+
 
 }

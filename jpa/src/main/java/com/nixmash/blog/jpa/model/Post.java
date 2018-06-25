@@ -1,15 +1,35 @@
- package com.nixmash.blog.jpa.model;
+package com.nixmash.blog.jpa.model;
 
 import com.nixmash.blog.jpa.enums.PostDisplayType;
 import com.nixmash.blog.jpa.enums.PostType;
 import com.nixmash.blog.jpa.utils.PostUtils;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.Type;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
+import javax.persistence.Access;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.persistence.Version;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -18,6 +38,8 @@ import java.util.Set;
 import static javax.persistence.AccessType.FIELD;
 import static javax.persistence.GenerationType.IDENTITY;
 
+@Getter
+@Setter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "posts")
@@ -57,9 +79,14 @@ public class Post implements Serializable {
     @Column(name = "post_image", length = MAX_POST_NAME_LENGTH)
     private String postImage;
 
+    @Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
+    @CreatedDate
     @Column(name = "post_date", nullable = false)
     private ZonedDateTime postDate;
 
+
+    @Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
+    @LastModifiedDate
     @Column(name = "post_modified", nullable = false)
     private ZonedDateTime postModified;
 
@@ -128,22 +155,16 @@ public class Post implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable = false, updatable = false)
     public User author;
 
-    public User getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-
-    // endregion
-
     // region Transient properties
 
     @Transient
     public boolean isOwner = false;
 
     // endregion
+
+    public Post(){
+
+    }
 
     // region method properties
 
@@ -160,181 +181,11 @@ public class Post implements Serializable {
     }
 
     public String getAuthorFullname() {
-        return author.getFirstName() + " " +  author.getLastName();
+        return author.getFirstName() + " " + author.getLastName();
     }
 
 
     // endregion
-
-    //region Getter Setters
-
-
-    public PostMeta getPostMeta() {
-        return postMeta;
-    }
-    public void setPostMeta(PostMeta postMeta) {
-        this.postMeta = postMeta;
-    }
-
-    public PostImage getSingleImage() {
-        return singleImage;
-    }
-    public void setSingleImage(PostImage singleImage) {
-        this.singleImage = singleImage;
-    }
-
-    public List<PostImage> getPostImages() {
-        return postImages;
-    }
-    public void setPostImages(List<PostImage> postImages) {
-        this.postImages = postImages;
-    }
-
-    public boolean getIsOwner() {
-        return isOwner;
-    }
-    public void setIsOwner(boolean owner) {
-        isOwner = owner;
-    }
-
-    public Long getPostId() {
-        return postId;
-    }
-    public void setPostId(Long postId) {
-        this.postId = postId;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getPostTitle() {
-        return postTitle;
-    }
-    public void setPostTitle(String postTitle) {
-        this.postTitle = postTitle;
-    }
-
-    public String getPostName() {
-        return postName;
-    }
-    public void setPostName(String postName) {
-        this.postName = postName;
-    }
-
-    public String getPostLink() {
-        return postLink;
-    }
-    public void setPostLink(String postLink) {
-        this.postLink = postLink;
-    }
-
-    @Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
-    @CreatedDate
-    public ZonedDateTime getPostDate() {
-        return postDate;
-    }
-    public void setPostDate(ZonedDateTime postDate) {
-        this.postDate = postDate;
-    }
-
-    @Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
-    @LastModifiedDate
-    public ZonedDateTime getPostModified() {
-        return postModified;
-    }
-    public void setPostModified(ZonedDateTime postModified) {
-        this.postModified = postModified;
-    }
-
-    public PostType getPostType() {
-        return postType;
-    }
-    public void setPostType(PostType postType) {
-        this.postType = postType;
-    }
-
-    public PostDisplayType getDisplayType() {
-        return displayType;
-    }
-    public void setDisplayType(PostDisplayType displayType) {
-        this.displayType = displayType;
-    }
-
-    public Boolean getIsPublished() {
-        return isPublished;
-    }
-    public void setIsPublished(Boolean isPublished) {
-        this.isPublished = isPublished;
-    }
-
-    public String getPostContent() {
-        return postContent;
-    }
-    public void setPostContent(String postContent) {
-        this.postContent = postContent;
-    }
-
-    public String getPostSource() {
-        return postSource;
-    }
-    public void setPostSource(String postSource) {
-        this.postSource = postSource;
-    }
-
-    public String getPostImage() {
-        return postImage;
-    }
-    public void setPostImage(String postImage) {
-        this.postImage = postImage;
-    }
-
-    public int getClickCount() {
-        return clickCount;
-    }
-    public void setClickCount(int clickCount) {
-        this.clickCount = clickCount;
-    }
-
-    public int getLikesCount() {
-        return likesCount;
-    }
-    public void setLikesCount(int likesCount) {
-        this.likesCount = likesCount;
-    }
-
-    public int getValueRating() {
-        return valueRating;
-    }
-    public void setValueRating(int valueRating) {
-        this.valueRating = valueRating;
-    }
-
-    public int getVersion() {
-        return version;
-    }
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
-    public Set<Tag> getTags() {
-        return tags;
-    }
-    public void setTags(Set<Tag> tags) {
-        this.tags = tags;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    //endregion
 
     public void update(String postTitle, String postContent, Boolean isPublished, PostDisplayType displayType) {
         this.postTitle = postTitle;
@@ -412,7 +263,7 @@ public class Post implements Serializable {
         }
 
         public Builder tags(Set<Tag> tags) {
-            built.tags= tags;
+            built.tags = tags;
             return this;
         }
 

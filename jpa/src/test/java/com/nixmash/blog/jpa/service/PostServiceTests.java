@@ -13,6 +13,7 @@ import com.nixmash.blog.jpa.model.Category;
 import com.nixmash.blog.jpa.model.Post;
 import com.nixmash.blog.jpa.model.PostImage;
 import com.nixmash.blog.jpa.repository.LikeRepository;
+import com.nixmash.blog.jpa.service.interfaces.PostService;
 import com.nixmash.blog.jpa.utils.PostTestUtils;
 import com.nixmash.blog.jpa.utils.PostUtils;
 import org.hamcrest.Matchers;

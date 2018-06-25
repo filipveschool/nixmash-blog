@@ -1,6 +1,5 @@
 package com.nixmash.blog.mvc.controller;
 
-import com.nixmash.blog.jpa.model.GitHubStats;
 import com.nixmash.blog.mvc.AbstractContext;
 import org.junit.Before;
 import org.junit.Test;

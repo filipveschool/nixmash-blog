@@ -8,6 +8,7 @@ import com.nixmash.blog.jpa.exceptions.SiteOptionNotFoundException;
 import com.nixmash.blog.jpa.model.SiteImage;
 import com.nixmash.blog.jpa.model.SiteOption;
 import com.nixmash.blog.jpa.repository.SiteImageRepository;
+import com.nixmash.blog.jpa.service.interfaces.SiteService;
 import javassist.NotFoundException;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;

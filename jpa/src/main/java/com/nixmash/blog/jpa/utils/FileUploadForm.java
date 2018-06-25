@@ -4,6 +4,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
+@Getter
+@Setter
 public class FileUploadForm {
 
     private List<MultipartFile> files;
@@ -14,21 +18,5 @@ public class FileUploadForm {
 
     public FileUploadForm(Long parentId) {
         this.parentId = parentId;
-    }
-
-    public Long getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
-
-    public List<MultipartFile> getFiles() {
-        return files;
-    }
-
-    public void setFiles(List<MultipartFile> files) {
-        this.files = files;
     }
 }

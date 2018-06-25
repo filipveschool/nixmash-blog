@@ -2,8 +2,8 @@ package com.nixmash.blog.mvc.components;
 
 import com.nixmash.blog.jpa.common.ApplicationSettings;
 import com.nixmash.blog.jpa.model.Post;
-import com.nixmash.blog.jpa.service.PostService;
-import com.nixmash.blog.mail.service.FmService;
+import com.nixmash.blog.jpa.service.interfaces.PostService;
+import com.nixmash.blog.mail.service.interfaces.FmService;
 import com.rometools.rome.feed.rss.Channel;
 import com.rometools.rome.feed.rss.Content;
 import com.rometools.rome.feed.rss.Description;

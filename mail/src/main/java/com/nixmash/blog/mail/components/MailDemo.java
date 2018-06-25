@@ -1,34 +1,29 @@
 package com.nixmash.blog.mail.components;
 
 import com.nixmash.blog.jpa.model.User;
-import com.nixmash.blog.jpa.service.UserService;
+import com.nixmash.blog.jpa.service.interfaces.UserService;
 import com.nixmash.blog.mail.dto.MailDTO;
-import com.nixmash.blog.mail.service.FmMailService;
-import com.nixmash.blog.mail.service.FmService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.nixmash.blog.mail.service.interfaces.FmMailService;
+import com.nixmash.blog.mail.service.interfaces.FmService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Component
 public class MailDemo {
 
-    private static final Logger logger = LoggerFactory.getLogger(MailDemo.class);
-
-    private final FmMailService fmMailService;
-    private final UserService userService;
-    private final FmService fmService;
-
+    @Autowired
+    private FmMailService fmMailService;
 
     @Autowired
-    public MailDemo(FmMailService fmMailService, UserService userService, FmService fmService) {
-        this.fmMailService = fmMailService;
-        this.userService = userService;
-        this.fmService = fmService;
-    }
+    private UserService userService;
+
+    @Autowired
+    private FmService fmService;
 
     public void init() {
         displayUserTemplate();
@@ -60,7 +55,6 @@ public class MailDemo {
     private void contactDemo() {
         fmMailService.sendContactMail(createContactMailDTO());
     }
-
 
     private MailDTO createContactMailDTO() {
         MailDTO mailDTO = new MailDTO();

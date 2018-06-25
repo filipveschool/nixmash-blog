@@ -3,6 +3,7 @@ package com.nixmash.blog.jpa.service;
 import com.nixmash.blog.jpa.SpringDataTests;
 import com.nixmash.blog.jpa.dto.PostDTO;
 import com.nixmash.blog.jpa.model.Post;
+import com.nixmash.blog.jpa.service.interfaces.PostService;
 import com.nixmash.blog.jpa.utils.PostTestUtils;
 import com.nixmash.blog.jpa.utils.PostUtils;
 import org.junit.After;

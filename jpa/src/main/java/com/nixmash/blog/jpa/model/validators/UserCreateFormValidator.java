@@ -2,27 +2,23 @@ package com.nixmash.blog.jpa.model.validators;
 
 import com.nixmash.blog.jpa.dto.UserDTO;
 import com.nixmash.blog.jpa.model.User;
-import com.nixmash.blog.jpa.service.AccessService;
-import com.nixmash.blog.jpa.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.nixmash.blog.jpa.service.interfaces.AccessService;
+import com.nixmash.blog.jpa.service.interfaces.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+@Slf4j
 @Component
 public class UserCreateFormValidator implements Validator {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserCreateFormValidator.class);
-    private final UserService userService;
-    private final AccessService accessService;
+    @Autowired
+    private UserService userService;
 
     @Autowired
-    public UserCreateFormValidator(UserService userService, AccessService accessService) {
-        this.userService = userService;
-        this.accessService = accessService;
-    }
+    private AccessService accessService;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -31,7 +27,7 @@ public class UserCreateFormValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        logger.debug("Validating {}", target);
+        log.debug("Validating {}", target);
         UserDTO form = (UserDTO) target;
         if (form.isNew()) {
             validatePasswords(errors, form);

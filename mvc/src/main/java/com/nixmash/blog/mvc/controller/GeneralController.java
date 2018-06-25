@@ -1,15 +1,13 @@
 package com.nixmash.blog.mvc.controller;
 
 import com.nixmash.blog.jpa.dto.SelectOptionDTO;
-import com.nixmash.blog.jpa.model.GitHubStats;
 import com.nixmash.blog.jpa.model.Post;
 import com.nixmash.blog.jpa.model.SiteImage;
-import com.nixmash.blog.jpa.service.PostService;
-import com.nixmash.blog.jpa.service.SiteService;
-import com.nixmash.blog.mail.service.FmService;
+import com.nixmash.blog.jpa.service.interfaces.PostService;
+import com.nixmash.blog.jpa.service.interfaces.SiteService;
+import com.nixmash.blog.mail.service.interfaces.FmService;
 import com.nixmash.blog.mvc.components.WebUI;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootVersion;
 import org.springframework.core.env.Environment;
@@ -30,11 +28,11 @@ import static com.nixmash.blog.mvc.controller.GlobalController.ERROR_PAGE_TITLE_
 import static java.util.stream.Collectors.joining;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
+@Slf4j
 @Controller
 public class GeneralController {
 
     // region Constants
-    private static final Logger logger = LoggerFactory.getLogger(GeneralController.class);
 
     public static final String HOME_VIEW = "home";
     public static final String REDIRECT_HOME_VIEW = "redirect:/";
@@ -70,12 +68,6 @@ public class GeneralController {
     public String home(Model model) {
         String springVersion = webUI.parameterizedMessage("home.spring.version", SpringBootVersion.getVersion());
         model.addAttribute("springVersion", springVersion);
-
-        GitHubStats gitHubStats = webUI.getCurrentGitHubStats();
-        if (gitHubStats != null) {
-            model.addAttribute("showGitHubStats", true);
-            model.addAttribute("gitHubStats", gitHubStats);
-        }
 
         if (webUI.isNixMash()) {
             SiteImage siteImage = siteService.getHomeBanner();
@@ -149,7 +141,7 @@ public class GeneralController {
     String updateBadges(@RequestBody List<String> badgeboys) {
         if (badgeboys != null) {
             String badges = badgeboys.stream().collect(joining(", "));
-            logger.debug("Badge Boy Items: " + badges);
+            log.debug("Badge Boy Items: " + badges);
             return webUI.getMessage("js.badgeboy.result", badges);
         } else
             return "No badges selected...";

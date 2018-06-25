@@ -1,4 +1,4 @@
-package com.nixmash.blog.mail.service;
+package com.nixmash.blog.mail.service.interfaces;
 
 import com.nixmash.blog.jpa.model.Post;
 import com.nixmash.blog.jpa.model.PostMeta;

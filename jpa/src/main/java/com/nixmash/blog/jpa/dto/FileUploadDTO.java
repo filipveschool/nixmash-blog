@@ -1,39 +1,24 @@
 package com.nixmash.blog.jpa.dto;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-/**
- * Created by daveburke on 7/29/16.
- */
+@Getter
+@Setter
 public class FileUploadDTO {
 
     private String filename;
+
     private Long parentId;
+
     private List<MultipartFile> files;
 
-    public String getFilename() {
-        return filename;
+
+    public FileUploadDTO() {
+
     }
 
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
-    public Long getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
-
-    public List<MultipartFile> getFiles() {
-        return files;
-    }
-
-    public void setFiles(List<MultipartFile> fileData) {
-        this.files = fileData;
-    }
 }

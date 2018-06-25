@@ -1,7 +1,7 @@
 package com.nixmash.blog.mvc.security;
 
 import com.nixmash.blog.jpa.model.User;
-import com.nixmash.blog.jpa.service.UserService;
+import com.nixmash.blog.jpa.service.interfaces.UserService;
 import com.nixmash.blog.mvc.components.WebUI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;

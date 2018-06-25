@@ -1,19 +1,19 @@
-package com.nixmash.blog.mail.service;
+package com.nixmash.blog.mail.service.implementations;
 
 import com.nixmash.blog.jpa.common.ApplicationSettings;
 import com.nixmash.blog.jpa.model.Post;
 import com.nixmash.blog.jpa.model.PostMeta;
 import com.nixmash.blog.jpa.model.User;
-import com.nixmash.blog.jpa.service.PostService;
+import com.nixmash.blog.jpa.service.interfaces.PostService;
 import com.nixmash.blog.mail.components.MailUI;
+import com.nixmash.blog.mail.service.interfaces.FmService;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -26,25 +26,25 @@ import java.time.format.DateTimeFormatter;
 import java.util.Hashtable;
 import java.util.Map;
 
+@Slf4j
 @Service("fmService")
 public class FmServiceImpl implements FmService {
 
-    private static final Logger logger = LoggerFactory.getLogger(FmServiceImpl.class);
-
-    private final ApplicationSettings applicationSettings;
-    private final Configuration fm;
-    private final Environment environment;
-    private final PostService postService;
-    private final MailUI mailUI;
 
     @Autowired
-    public FmServiceImpl(ApplicationSettings applicationSettings, Configuration fm, Environment environment, PostService postService, MailUI mailUI) {
-        this.applicationSettings = applicationSettings;
-        this.fm = fm;
-        this.environment = environment;
-        this.postService = postService;
-        this.mailUI = mailUI;
-    }
+    private ApplicationSettings applicationSettings;
+
+    @Autowired
+    private Configuration fm;
+
+    @Autowired
+    private Environment environment;
+
+    @Autowired
+    private PostService postService;
+
+    @Autowired
+    private MailUI mailUI;
 
     // region Test Template
 
@@ -67,7 +67,7 @@ public class FmServiceImpl implements FmService {
             Template template = fm.getTemplate("tests/test.ftl");
             result = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
         } catch (IOException | TemplateException e) {
-            logger.error("Problem merging test template : " + e.getMessage());
+            log.error("Problem merging test template : " + e.getMessage());
         }
         return result;
     }
@@ -77,7 +77,7 @@ public class FmServiceImpl implements FmService {
     // region PostMeta Tags
 
     @Override
-    public  String getTwitterTemplate(PostMeta postMeta) {
+    public String getTwitterTemplate(PostMeta postMeta) {
         String result = null;
         Map<String, Object> model = new Hashtable<>();
 
@@ -85,10 +85,10 @@ public class FmServiceImpl implements FmService {
         String twitterCard = postMeta.getTwitterCardType().name().toLowerCase();
         model.put("twitterCardType", twitterCard);
         try {
-            result =  FreeMarkerTemplateUtils
+            result = FreeMarkerTemplateUtils
                     .processTemplateIntoString(fm.getTemplate("posts/twitter.ftl"), model);
         } catch (IOException | TemplateException e) {
-            logger.error("Problem merging Twitter MetaTag template : " + e.getMessage());
+            log.error("Problem merging Twitter MetaTag template : " + e.getMessage());
         }
         return result;
     }
@@ -103,9 +103,9 @@ public class FmServiceImpl implements FmService {
         Map<String, Object> model = new Hashtable<>();
 
         try {
-            result =  FreeMarkerTemplateUtils.processTemplateIntoString(fm.getTemplate("posts/nolinks.ftl"), model);
+            result = FreeMarkerTemplateUtils.processTemplateIntoString(fm.getTemplate("posts/nolinks.ftl"), model);
         } catch (IOException | TemplateException e) {
-            logger.error("Problem merging No Links template : " + e.getMessage());
+            log.error("Problem merging No Links template : " + e.getMessage());
         }
         return result;
     }
@@ -118,9 +118,9 @@ public class FmServiceImpl implements FmService {
 
         model.put("search", search);
         try {
-            result =  FreeMarkerTemplateUtils.processTemplateIntoString(fm.getTemplate("posts/noresults.ftl"), model);
+            result = FreeMarkerTemplateUtils.processTemplateIntoString(fm.getTemplate("posts/noresults.ftl"), model);
         } catch (IOException | TemplateException e) {
-            logger.error("Problem merging Quick Search template : " + e.getMessage());
+            log.error("Problem merging Quick Search template : " + e.getMessage());
         }
         return result;
     }
@@ -129,9 +129,9 @@ public class FmServiceImpl implements FmService {
     public String getNoLikesMessage() {
         String result = null;
         try {
-            result =  FreeMarkerTemplateUtils.processTemplateIntoString(fm.getTemplate("posts/nolikes.ftl"), null);
+            result = FreeMarkerTemplateUtils.processTemplateIntoString(fm.getTemplate("posts/nolikes.ftl"), null);
         } catch (IOException | TemplateException e) {
-            logger.error("Problem merging NoLikes template : " + e.getMessage());
+            log.error("Problem merging NoLikes template : " + e.getMessage());
         }
         return result;
     }
@@ -149,7 +149,7 @@ public class FmServiceImpl implements FmService {
             Template template = fm.getTemplate("posts/rss_post.ftl");
             html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
         } catch (IOException | TemplateException e) {
-            logger.error("Problem merging post template : " + e.getMessage());
+            log.error("Problem merging post template : " + e.getMessage());
         }
         return html;
     }
@@ -176,7 +176,7 @@ public class FmServiceImpl implements FmService {
             Template template = fm.getTemplate(ftl);
             html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
         } catch (IOException | TemplateException e) {
-            logger.error("Problem merging post template : " + e.getMessage());
+            log.error("Problem merging post template : " + e.getMessage());
         }
         return html;
     }
@@ -205,7 +205,7 @@ public class FmServiceImpl implements FmService {
             InputStream in = IOUtils.toInputStream(html, "UTF-8");
             FileUtils.copyInputStreamToFile(in, new File(azFilePath + azFileName));
         } catch (IOException | TemplateException e) {
-            logger.error("Problem creating A-to-Z template or HTML file: " + e.getMessage());
+            log.error("Problem creating A-to-Z template or HTML file: " + e.getMessage());
         }
         return html;
     }
@@ -216,9 +216,9 @@ public class FmServiceImpl implements FmService {
         Map<String, Object> model = new Hashtable<>();
 
         try {
-            result =  FreeMarkerTemplateUtils.processTemplateIntoString(fm.getTemplate("posts/nomlts.ftl"), model);
+            result = FreeMarkerTemplateUtils.processTemplateIntoString(fm.getTemplate("posts/nomlts.ftl"), model);
         } catch (IOException | TemplateException e) {
-            logger.error("Problem merging No MoreLikeThis template : " + e.getMessage());
+            log.error("Problem merging No MoreLikeThis template : " + e.getMessage());
         }
         return result;
     }
@@ -228,12 +228,12 @@ public class FmServiceImpl implements FmService {
     // region Utility Templates
 
     @Override
-    public String getRobotsTxt()  {
+    public String getRobotsTxt() {
         String result = null;
         try {
-            result =  FreeMarkerTemplateUtils.processTemplateIntoString(fm.getTemplate("utils/robots.ftl"), null);
+            result = FreeMarkerTemplateUtils.processTemplateIntoString(fm.getTemplate("utils/robots.ftl"), null);
         } catch (IOException | TemplateException e) {
-            logger.error("Problem merging Robots.txt template : " + e.getMessage());
+            log.error("Problem merging Robots.txt template : " + e.getMessage());
         }
         return result;
     }
@@ -242,20 +242,20 @@ public class FmServiceImpl implements FmService {
     public String getFileUploadingScript() {
         String result = null;
         try {
-            result =  FreeMarkerTemplateUtils.processTemplateIntoString(fm.getTemplate("utils/fileuploading.ftl"), null);
+            result = FreeMarkerTemplateUtils.processTemplateIntoString(fm.getTemplate("utils/fileuploading.ftl"), null);
         } catch (IOException | TemplateException e) {
-            logger.error("Problem merging fileuploading template : " + e.getMessage());
+            log.error("Problem merging fileuploading template : " + e.getMessage());
         }
         return result;
     }
 
     @Override
-    public String getFileUploadedScript()  {
+    public String getFileUploadedScript() {
         String result = null;
         try {
-            result =  FreeMarkerTemplateUtils.processTemplateIntoString(fm.getTemplate("utils/fileuploaded.ftl"), null);
+            result = FreeMarkerTemplateUtils.processTemplateIntoString(fm.getTemplate("utils/fileuploaded.ftl"), null);
         } catch (IOException | TemplateException e) {
-            logger.error("Problem merging fileuploaded template : " + e.getMessage());
+            log.error("Problem merging fileuploaded template : " + e.getMessage());
         }
         return result;
     }

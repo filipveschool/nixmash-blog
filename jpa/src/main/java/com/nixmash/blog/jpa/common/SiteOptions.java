@@ -3,6 +3,8 @@ package com.nixmash.blog.jpa.common;
 import com.nixmash.blog.jpa.enums.UserRegistration;
 import com.nixmash.blog.jpa.model.SiteOption;
 import com.nixmash.blog.jpa.repository.SiteOptionRepository;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
@@ -15,9 +17,25 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Map;
 
+@Getter
+@Setter
 @Component
 @DependsOn("databasePopulator")
 public class SiteOptions {
+
+    // region Properties
+
+    private String siteName;
+
+    private String siteDescription;
+
+    private Boolean addGoogleAnalytics;
+
+    private String googleAnalyticsTrackingId;
+
+    private UserRegistration userRegistration;
+
+    // endregion
 
     private SiteOptionRepository siteOptionRepository;
 
@@ -33,11 +51,11 @@ public class SiteOptions {
         Collection<SiteOption> siteOptionKeyValues = siteOptionRepository.findAll();
 
         Map<String, Object> options = new Hashtable<>();
-        for (SiteOption siteOption : siteOptionKeyValues) {
+        for (SiteOption siteOption: siteOptionKeyValues) {
             options.put(siteOption.getName(), siteOption.getValue());
         }
-        for (String key : options.keySet()) {
-            for (Field f : this.getClass().getDeclaredFields()) {
+        for (String key: options.keySet()) {
+            for (Field f: this.getClass().getDeclaredFields()) {
                 if (f.getName().toUpperCase().equals(key.toUpperCase())) {
                     setSiteOptionProperty(key, options.get(key));
                 }
@@ -45,59 +63,6 @@ public class SiteOptions {
         }
     }
 
-    // region Properties
-
-    private String siteName;
-    private String siteDescription;
-    private Boolean addGoogleAnalytics;
-    private String googleAnalyticsTrackingId;
-    private UserRegistration userRegistration;
-
-    // endregion
-
-    // region Getter Setters
-
-    public String getSiteName() {
-        return siteName;
-    }
-
-    public void setSiteName(String siteName) {
-        this.siteName = siteName;
-    }
-
-    public String getSiteDescription() {
-        return siteDescription;
-    }
-
-    public void setSiteDescription(String siteDescription) {
-        this.siteDescription = siteDescription;
-    }
-
-    public Boolean getAddGoogleAnalytics() {
-        return addGoogleAnalytics;
-    }
-
-    public void setAddGoogleAnalytics(Boolean addGoogleAnalytics) {
-        this.addGoogleAnalytics = addGoogleAnalytics;
-    }
-
-    public String getGoogleAnalyticsTrackingId() {
-        return googleAnalyticsTrackingId;
-    }
-
-    public void setGoogleAnalyticsTrackingId(String googleAnalyticsTrackingId) {
-        this.googleAnalyticsTrackingId = googleAnalyticsTrackingId;
-    }
-
-    public UserRegistration getUserRegistration() {
-        return userRegistration;
-    }
-
-    public void setUserRegistration(UserRegistration userRegistration) {
-        this.userRegistration = userRegistration;
-    }
-
-    // endregion
 
     // region ToString
 

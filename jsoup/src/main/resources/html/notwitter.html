@@ -1976,7 +1976,8 @@
                             <p>The <code>Mail</code> Module contains the mail functionality. Like the JPA project above, an External <code>mail.properties</code> file defines SMTP HostName and other mail server properties. That file pathname is defined in the <code>Mail</code> Module <code>MailSettings.java</code> Class. An example of <code>mail.properties</code> is found in the <code>/install/samples</code> folder.</p>
 
                             <div class="highlight highlight-source-java"><pre>@<span class="pl-smi">Component</span>
-@PropertySource(<span class="pl-s"><span class="pl-pds">"</span>file:/home/daveburke/web/nixmashspring/mail.properties<span class="pl-pds">"</span></span>)
+@PropertySource(<span class="pl-s"><span class="pl-pds">"
+                                </span>file:/home/daveburke/web/nixmashspring/mail.properties<span class="pl-pds">"</span></span>)
 @ConfigurationProperties(prefix <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">"</span>mail<span class="pl-pds">"</span></span>)
 <span class="pl-k">public</span> <span class="pl-k">class</span> <span class="pl-en">MailSettings</span> {</pre></div>
 

@@ -1,57 +1,35 @@
 package com.nixmash.blog.jpa.model;
 
-import javax.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-/**
- * Created by daveburke on 7/20/16.
- */
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Getter
+@Setter
 @Entity
 @Table(name = "user_likes")
 public class Like {
-    private long likeId;
-    private long userId;
-    private long itemId;
-    private int contentTypeId;
 
     @Id
     @Column(name = "like_id", nullable = false)
-    public long getLikeId() {
-        return likeId;
-    }
-
-    public void setLikeId(long likeId) {
-        this.likeId = likeId;
-    }
+    private long likeId;
 
     @Basic
     @Column(name = "user_id", nullable = false)
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
+    private long userId;
 
     @Basic
     @Column(name = "item_id", nullable = false)
-    public long getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(long itemId) {
-        this.itemId = itemId;
-    }
+    private long itemId;
 
     @Basic
     @Column(name = "content_type_id", nullable = false)
-    public int getContentTypeId() {
-        return contentTypeId;
-    }
-
-    public void setContentTypeId(int contentTypeId) {
-        this.contentTypeId = contentTypeId;
-    }
+    private int contentTypeId;
 
     public Like() {
     }

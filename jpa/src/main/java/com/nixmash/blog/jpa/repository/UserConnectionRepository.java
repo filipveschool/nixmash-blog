@@ -16,11 +16,12 @@
 package com.nixmash.blog.jpa.repository;
 
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.Repository;
 
 import com.nixmash.blog.jpa.model.UserConnection;
 
-public interface UserConnectionRepository extends Repository<UserConnection, String> {
+public interface UserConnectionRepository extends JpaRepository<UserConnection, String> {
 
     UserConnection findByUserId(String userId) throws DataAccessException;
 

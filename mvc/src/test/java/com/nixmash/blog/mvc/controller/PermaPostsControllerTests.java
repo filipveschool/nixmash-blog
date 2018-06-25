@@ -1,7 +1,7 @@
 package com.nixmash.blog.mvc.controller;
 
 import com.nixmash.blog.jpa.exceptions.PostNotFoundException;
-import com.nixmash.blog.jpa.service.PostService;
+import com.nixmash.blog.jpa.service.interfaces.PostService;
 import com.nixmash.blog.mvc.AbstractContext;
 import org.junit.Before;
 import org.junit.Test;

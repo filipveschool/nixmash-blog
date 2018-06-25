@@ -9,9 +9,6 @@ import java.lang.annotation.Target;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-/**
- * Created by daveburke on 10/25/16.
- */
 @SuppressWarnings({"SpringElInspection", "ELValidationInJSP"})
 @Caching(
 

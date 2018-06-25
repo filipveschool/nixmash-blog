@@ -1,8 +1,8 @@
-package com.nixmash.blog.jpa.service;
+package com.nixmash.blog.jpa.service.implementations;
 
 import com.nixmash.blog.jpa.dto.AccessDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.nixmash.blog.jpa.service.interfaces.AccessService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
@@ -10,14 +10,11 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by daveburke on 12/10/16.
- */
+@Slf4j
 @Service("accessService")
 @PropertySource("file:/home/daveburke/web/nixmash/access.properties")
 public class AccessServiceImpl implements AccessService {
 
-    private static final Logger logger = LoggerFactory.getLogger(AccessServiceImpl.class);
 
     @Value("${access.blacklisted.email.endswith}")
     String blackListedDomains;
@@ -51,7 +48,7 @@ public class AccessServiceImpl implements AccessService {
             }
             accessDTO.setApproved(!isDomainBlacklisted(accessDTO.getDomain()));
         }
-        logger.debug(String.valueOf(accessDTO));
+        log.debug(String.valueOf(accessDTO));
         return accessDTO;
     }
 
@@ -76,12 +73,12 @@ public class AccessServiceImpl implements AccessService {
 
     private boolean isDomainBlacklisted(String domain) {
         boolean isBlacklisted = false;
-        for (String blacklistedDomain :
+        for (String blacklistedDomain:
                 blackListedDomains()) {
             if (domain.endsWith(blacklistedDomain))
                 isBlacklisted = true;
         }
-        for (String overrideDomain :
+        for (String overrideDomain:
                 overrideDomains()) {
             if (domain.endsWith(overrideDomain))
                 isBlacklisted = false;

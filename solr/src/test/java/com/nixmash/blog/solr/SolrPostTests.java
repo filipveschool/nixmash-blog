@@ -5,7 +5,7 @@ import com.nixmash.blog.jpa.dto.PostQueryDTO;
 import com.nixmash.blog.jpa.enums.PostType;
 import com.nixmash.blog.jpa.exceptions.PostNotFoundException;
 import com.nixmash.blog.jpa.model.Post;
-import com.nixmash.blog.jpa.service.PostService;
+import com.nixmash.blog.jpa.service.interfaces.PostService;
 import com.nixmash.blog.jpa.utils.PostUtils;
 import com.nixmash.blog.solr.model.PostDoc;
 import com.nixmash.blog.solr.repository.custom.CustomPostDocRepository;

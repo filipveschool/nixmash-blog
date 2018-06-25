@@ -1,6 +1,6 @@
 package com.nixmash.blog.jsoup.utils;
 
-import com.nixmash.blog.jpa.service.PostService;
+import com.nixmash.blog.jpa.service.interfaces.PostService;
 import com.nixmash.blog.jsoup.JsoupContext;
 import com.nixmash.blog.jsoup.base.JsoupHtmlParser;
 import com.nixmash.blog.jsoup.dto.TestDTO;

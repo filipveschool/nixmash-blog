@@ -7,16 +7,15 @@ import com.nixmash.blog.jpa.enums.PostDisplayType;
 import com.nixmash.blog.jpa.enums.PostType;
 import com.nixmash.blog.jpa.model.CurrentUser;
 import com.nixmash.blog.jpa.model.Post;
-import com.nixmash.blog.jpa.service.PostService;
+import com.nixmash.blog.jpa.service.interfaces.PostService;
 import com.nixmash.blog.jpa.utils.Pair;
 import com.nixmash.blog.jpa.utils.PostUtils;
-import com.nixmash.blog.mail.service.FmService;
+import com.nixmash.blog.mail.service.interfaces.FmService;
 import com.nixmash.blog.mvc.annotations.JsonRequestMapping;
 import com.nixmash.blog.solr.model.PostDoc;
 import com.nixmash.blog.solr.service.PostDocService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.solr.UncategorizedSolrException;
@@ -35,11 +34,11 @@ import java.util.*;
 import static com.nixmash.blog.mvc.controller.PostsController.*;
 
 
+@Slf4j
 @RestController
 @JsonRequestMapping(value = "/json/posts")
 public class PostsRestController {
 
-    private static final Logger logger = LoggerFactory.getLogger(PostsRestController.class);
     private static final String TITLE_TEMPLATE = "title";
     private static final String SESSION_ATTRIBUTE_POSTS = "posts";
     private static final String SESSION_ATTRIBUTE_TAGPOSTTITLES = "tagposttitles";
@@ -50,21 +49,20 @@ public class PostsRestController {
     private static final String SESSION_ATTRIBUTE_QUICKSEARCH_POSTS = "quicksearchposts";
     private static final String SESSION_ATTRIBUTE_FULLSEARCH_POSTS = "fullsearchposts";
 
+    @Autowired
     private PostService postService;
+    
+    @Autowired
     private FmService fmService;
+    
+    @Autowired
     private ApplicationSettings applicationSettings;
+    
+    @Autowired
     private PostDocService postDocService;
 
     private int minTagCount = 0;
     private int maxTagCount = 0;
-
-    @Autowired
-    public PostsRestController(PostService postService, FmService fmService, ApplicationSettings applicationSettings, PostDocService postDocService) {
-        this.postService = postService;
-        this.fmService = fmService;
-        this.applicationSettings = applicationSettings;
-        this.postDocService = postDocService;
-    }
 
     // region Post Titles
 
@@ -236,7 +234,7 @@ public class PostsRestController {
             try {
                 postDocs = postDocService.doFullSearch(postQueryDTO);
             } catch (UncategorizedSolrException ex) {
-                logger.info(MessageFormat.format("Bad Query: {0}", postQueryDTO.getQuery()));
+                log.info(MessageFormat.format("Bad Query: {0}", postQueryDTO.getQuery()));
                 return fmService.getNoResultsMessage(postQueryDTO.getQuery());
             }
 
@@ -338,9 +336,9 @@ public class PostsRestController {
                     post.setSingleImage(postService.getPostImages(post.getPostId()).get(0));
                 }
             } catch (Exception e) {
-                logger.info(String.format("Image Retrieval Error for Post ID:%s Title: %s", String.valueOf(post.getPostId()), post.getPostTitle()));
+                log.info(String.format("Image Retrieval Error for Post ID:%s Title: %s", String.valueOf(post.getPostId()), post.getPostTitle()));
             }
-            post.setIsOwner(PostUtils.isPostOwner(currentUser, post.getUserId()));
+            post.setOwner(PostUtils.isPostOwner(currentUser, post.getUserId()));
             result += fmService.createPostHtml(post, format);
         }
         return result;

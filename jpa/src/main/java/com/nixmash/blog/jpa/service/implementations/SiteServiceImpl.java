@@ -1,4 +1,4 @@
-package com.nixmash.blog.jpa.service;
+package com.nixmash.blog.jpa.service.implementations;
 
 import com.nixmash.blog.jpa.common.SiteOptions;
 import com.nixmash.blog.jpa.dto.SiteOptionDTO;
@@ -7,9 +7,9 @@ import com.nixmash.blog.jpa.model.SiteImage;
 import com.nixmash.blog.jpa.model.SiteOption;
 import com.nixmash.blog.jpa.repository.SiteImageRepository;
 import com.nixmash.blog.jpa.repository.SiteOptionRepository;
+import com.nixmash.blog.jpa.service.interfaces.SiteService;
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -19,26 +19,19 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.concurrent.ThreadLocalRandom;
 
-/**
- *
- */
+@Slf4j
 @Service("siteService")
 @Transactional
 public class SiteServiceImpl implements SiteService {
 
-    private static final Logger logger = LoggerFactory.getLogger(SiteServiceImpl.class);
-
+    @Autowired
     private SiteOptionRepository siteOptionRepository;
-    private SiteOptions siteOptions;
-    private SiteImageRepository siteImageRepository;
 
     @Autowired
-    public SiteServiceImpl(SiteOptionRepository siteOptionRepository, SiteOptions siteOptions, SiteImageRepository siteImageRepository) {
-        this.siteOptionRepository = siteOptionRepository;
-        this.siteOptions = siteOptions;
-        this.siteImageRepository = siteImageRepository;
-    }
+    private SiteOptions siteOptions;
 
+    @Autowired
+    private SiteImageRepository siteImageRepository;
 
     // region SiteImages
 
@@ -83,30 +76,6 @@ public class SiteServiceImpl implements SiteService {
     }
 
     /**
-     * Displays Home Page  Banner based on Day of the Month
-     * Valid when the number of available banners is less than the days in the month
-     *
-     * @return SiteImage
-     */
-/*    @Transactional
-    @Override
-    public SiteImage getHomeBanner() {
-        int dayOfMonth = DateTime.now().dayOfMonth().get() - 1;
-
-        Collection<SiteImage> siteImages = siteImageRepository.findByBannerImageTrueAndIsActiveTrue();
-        int activeBannerCount = siteImages.size();
-        int siteImageIndex = 1;
-
-        if (dayOfMonth < activeBannerCount) {
-            siteImageIndex = dayOfMonth;
-        } else {
-            siteImageIndex = dayOfMonth - activeBannerCount;
-        }
-        return new ArrayList<>(siteImages).get(siteImageIndex);
-    }*/
-
-
-    /**
      * Used for viewing specific banners in development and client review
      * Mapped to: /dev/banner?id=siteImageId
      *
@@ -126,7 +95,7 @@ public class SiteServiceImpl implements SiteService {
 
     @Override
     public SiteOption update(SiteOptionDTO siteOptionDTO) throws SiteOptionNotFoundException {
-        logger.debug("Updating siteOption property {} with value: {}",
+        log.debug("Updating siteOption property {} with value: {}",
                 siteOptionDTO.getName(), siteOptionDTO.getValue());
 
         SiteOption found = findOptionByName(siteOptionDTO.getName());
@@ -135,7 +104,7 @@ public class SiteServiceImpl implements SiteService {
         try {
             siteOptions.setSiteOptionProperty(siteOptionDTO.getName(), siteOptionDTO.getValue());
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            logger.error("Error updating SiteOption Properties " + e.getMessage());
+            log.error("Error updating SiteOption Properties " + e.getMessage());
         }
         return found;
     }
@@ -144,11 +113,11 @@ public class SiteServiceImpl implements SiteService {
     @Override
     public SiteOption findOptionByName(String name) throws SiteOptionNotFoundException {
 
-        logger.debug("Finding siteOption property with name: {}", name);
+        log.debug("Finding siteOption property with name: {}", name);
         SiteOption found = siteOptionRepository.findByNameIgnoreCase(name);
 
         if (found == null) {
-            logger.debug("No siteOption property with name: {}", name);
+            log.debug("No siteOption property with name: {}", name);
             throw new SiteOptionNotFoundException("No siteOption with property name: " + name);
         }
 

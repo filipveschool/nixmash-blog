@@ -1,15 +1,25 @@
 package com.nixmash.blog.jpa.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "site_options")
 public class SiteOption implements Serializable {
 
     private static final long serialVersionUID = 6690621866489266673L;
+
     public static final int MAX_LENGTH_PROPERTYNAME = 50;
 
     @Id
@@ -21,35 +31,15 @@ public class SiteOption implements Serializable {
     @NotEmpty
     private String name;
 
-    @Column(name = "option_value", columnDefinition="TEXT")
+    @Column(name = "option_value", columnDefinition = "TEXT")
     private String value;
 
-    public Long getOptionId() {
-        return optionId;
-    }
+    public SiteOption(){
 
-    public void setOptionId(Long optionId) {
-        this.optionId = optionId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
     }
 
     public void update(final String optionName, final String optionValue) {
         this.name = optionName;
-        this.value= optionValue;
+        this.value = optionValue;
     }
 }

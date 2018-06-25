@@ -2,9 +2,9 @@ package com.nixmash.blog.mvc.controller;
 
 import com.nixmash.blog.jpa.common.ApplicationSettings;
 import com.nixmash.blog.jpa.model.PostImage;
-import com.nixmash.blog.jpa.service.PostService;
+import com.nixmash.blog.jpa.service.interfaces.PostService;
 import com.nixmash.blog.jpa.utils.SharedUtils;
-import com.nixmash.blog.mail.service.FmService;
+import com.nixmash.blog.mail.service.interfaces.FmService;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;

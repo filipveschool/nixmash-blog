@@ -1,7 +1,6 @@
 package com.nixmash.blog.mail.configuration;
 
 import com.nixmash.blog.jpa.config.ApplicationConfig;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,20 +13,13 @@ import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 import java.io.IOException;
 
 @Configuration
-@PropertySource("classpath:/mail.properties")
 @Import({ApplicationConfig.class})
-public class MailConfig  {
-
-    @Value("${nixmash.mode.enabled}")
-    private Boolean nixmashModeEnabled;
+public class MailConfig {
 
     @Bean
     public FreeMarkerConfigurer freemarkerConfigurer() throws IOException {
         FreeMarkerConfigurer result = new FreeMarkerConfigurer();
-        if (nixmashModeEnabled)
-            result.setTemplateLoaderPath("classpath:/nixmarker/");
-        else
-            result.setTemplateLoaderPath("classpath:/freemarker/");
+        result.setTemplateLoaderPath("classpath:/freemarker/");
         return result;
     }
 
@@ -43,10 +35,7 @@ public class MailConfig  {
     @Bean
     public MessageSource mailMessageSource() {
         ResourceBundleMessageSource msgsource = new ResourceBundleMessageSource();
-        if (nixmashModeEnabled)
-            msgsource.setBasename("mail-nixmash");
-        else
-            msgsource.setBasename("mail-messages");
+        msgsource.setBasename("mail-messages");
         return msgsource;
     }
 

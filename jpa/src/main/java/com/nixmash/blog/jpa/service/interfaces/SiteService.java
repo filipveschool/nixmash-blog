@@ -1,4 +1,4 @@
-package com.nixmash.blog.jpa.service;
+package com.nixmash.blog.jpa.service.interfaces;
 
 import com.nixmash.blog.jpa.dto.SiteOptionDTO;
 import com.nixmash.blog.jpa.exceptions.SiteOptionNotFoundException;

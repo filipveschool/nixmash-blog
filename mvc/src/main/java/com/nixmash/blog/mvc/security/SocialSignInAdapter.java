@@ -17,7 +17,7 @@ package com.nixmash.blog.mvc.security;
 
 import com.nixmash.blog.jpa.model.User;
 import com.nixmash.blog.jpa.repository.UserRepository;
-import com.nixmash.blog.jpa.service.UserService;
+import com.nixmash.blog.jpa.service.interfaces.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.social.connect.Connection;

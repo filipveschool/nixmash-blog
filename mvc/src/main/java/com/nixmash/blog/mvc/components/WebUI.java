@@ -1,24 +1,15 @@
 package com.nixmash.blog.mvc.components;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.nixmash.blog.jpa.common.ApplicationSettings;
-import com.nixmash.blog.jpa.dto.GitHubDTO;
 import com.nixmash.blog.jpa.dto.ProfileImageDTO;
-import com.nixmash.blog.jpa.model.GitHubStats;
-import com.nixmash.blog.jpa.service.StatService;
+import com.nixmash.blog.jpa.service.interfaces.StatService;
+import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnails;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
@@ -29,10 +20,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Locale;
 
+@Slf4j
 @Component
 public class WebUI {
 
-    private static final Logger logger = LoggerFactory.getLogger(WebUI.class);
 
     public static final String FLASH_MESSAGE_KEY_FEEDBACK = "feedbackMessage";
 
@@ -141,46 +132,6 @@ public class WebUI {
         File imageDestination = new File(destination + userKey);
         ImageIO.write(bufferedImage, "png", imageDestination);
 
-    }
-
-    // endregion
-
-    // region GitHub Statistics
-
-    @Cacheable(cacheNames = "githubStats", key = "#root.methodName")
-    public GitHubStats getCurrentGitHubStats() {
-        return statService.getCurrentGitHubStats();
-    }
-
-    public GitHubDTO getGitHubStats() {
-
-        String gitHubRepoUrl = environment.getProperty("github.repo.url");
-        String gitHubUserUrl = environment.getProperty("github.user.url");
-
-        // Load Repository JSON elements into GitHubDTO Object
-
-        GitHubDTO gitHubDTO = new GitHubDTO();
-
-        RestTemplate restTemplate = new RestTemplate();
-        try {
-            gitHubDTO = restTemplate.getForObject(gitHubRepoUrl, GitHubDTO.class);
-        } catch (RestClientException e) {
-            gitHubDTO.setIsEmpty(true);
-            return gitHubDTO;
-        }
-
-
-        // Load User Followers count from GitHub User JSON Endpoint and add to GitHubDTO
-
-        HttpEntity<String> stringUserEntity = restTemplate.getForEntity(gitHubUserUrl, String.class);
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            ObjectNode node = mapper.readValue(stringUserEntity.getBody(), ObjectNode.class);
-            gitHubDTO.setFollowers(node.get("followers").intValue());
-        } catch (IOException e) {
-           logger.error("Error adding follower count from GitHub API to GitHubDTO object");
-        }
-        return gitHubDTO;
     }
 
     // endregion

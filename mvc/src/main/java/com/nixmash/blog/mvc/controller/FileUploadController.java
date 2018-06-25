@@ -3,7 +3,7 @@ package com.nixmash.blog.mvc.controller;
 import com.nixmash.blog.jpa.dto.ProfileImageDTO;
 import com.nixmash.blog.jpa.model.CurrentUser;
 import com.nixmash.blog.jpa.model.validators.ProfileImageValidator;
-import com.nixmash.blog.jpa.service.UserService;
+import com.nixmash.blog.jpa.service.interfaces.UserService;
 import com.nixmash.blog.mvc.components.WebUI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

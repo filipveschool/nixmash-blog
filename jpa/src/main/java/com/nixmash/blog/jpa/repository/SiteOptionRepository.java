@@ -2,14 +2,13 @@ package com.nixmash.blog.jpa.repository;
 
 import com.nixmash.blog.jpa.model.SiteOption;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 
-/**
- * Created by daveburke on 5/7/16.
- */
-public interface SiteOptionRepository extends Repository<SiteOption, Long> {
+@Repository
+public interface SiteOptionRepository extends CrudRepository<SiteOption, Long> {
 
     SiteOption findByNameIgnoreCase(String optionName) throws DataAccessException;
 

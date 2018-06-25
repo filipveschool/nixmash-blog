@@ -2,13 +2,13 @@ package com.nixmash.blog.mail;
 
 import com.nixmash.blog.jpa.common.ApplicationSettings;
 import com.nixmash.blog.jpa.model.User;
-import com.nixmash.blog.jpa.service.UserService;
+import com.nixmash.blog.jpa.service.interfaces.UserService;
 import com.nixmash.blog.mail.common.MailSettings;
 import com.nixmash.blog.mail.components.MailSender;
 import com.nixmash.blog.mail.components.MailUI;
 import com.nixmash.blog.mail.dto.MailDTO;
-import com.nixmash.blog.mail.service.FmMailService;
-import com.nixmash.blog.mail.service.FmMailServiceImpl;
+import com.nixmash.blog.mail.service.interfaces.FmMailService;
+import com.nixmash.blog.mail.service.implementations.FmMailServiceImpl;
 import freemarker.template.Configuration;
 import org.junit.Before;
 import org.junit.Test;

@@ -4,6 +4,7 @@ import com.nixmash.blog.jpa.SpringDataTests;
 import com.nixmash.blog.jpa.dto.UserDTO;
 import com.nixmash.blog.jpa.model.User;
 import com.nixmash.blog.jpa.repository.UserDataRepository;
+import com.nixmash.blog.jpa.service.interfaces.UserService;
 import com.nixmash.blog.jpa.utils.UserTestUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;

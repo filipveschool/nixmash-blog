@@ -3,23 +3,40 @@ package com.nixmash.blog.jpa.model;
 import com.nixmash.blog.jpa.enums.Role;
 import com.nixmash.blog.jpa.enums.SignInProvider;
 import com.nixmash.blog.jpa.model.validators.ExtendedEmailValidator;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 
+@Getter
+@Setter
 @Entity
+@Slf4j
 @Table(name = "users")
 public class User implements UserDetails, Serializable {
 
     private static final long serialVersionUID = 2002390446280945447L;
-    private static final Logger logger = LoggerFactory.getLogger(User.class);
 
     public static final int MAX_LENGTH_EMAIL_ADDRESS = 100;
     public static final int MAX_LENGTH_FIRST_NAME = 25;
@@ -38,13 +55,6 @@ public class User implements UserDetails, Serializable {
     @Column(name = "user_id")
     protected Long id;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
 
     @Transient
     public boolean isNew() {
@@ -53,29 +63,29 @@ public class User implements UserDetails, Serializable {
 
     @Column(unique = true)
     @NotEmpty
-    @Length(min=MIN_LENGTH_USERNAME, max=MAX_LENGTH_USERNAME)
+    @Length(min = MIN_LENGTH_USERNAME, max = MAX_LENGTH_USERNAME)
     private String username;
 
     @Column
     @NotEmpty
-    @Length(min=MIN_LENGTH_PASSWORD)
+    @Length(min = MIN_LENGTH_PASSWORD)
     private String password;
 
     @Basic
     @ExtendedEmailValidator
     @NotEmpty
-    @Length(max=MAX_LENGTH_EMAIL_ADDRESS)
-    @Column(unique=true, nullable = false)
+    @Length(max = MAX_LENGTH_EMAIL_ADDRESS)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @Column(name = "first_name")
     @NotEmpty
-    @Length(max=MAX_LENGTH_FIRST_NAME)
+    @Length(max = MAX_LENGTH_FIRST_NAME)
     private String firstName;
 
     @Column(name = "last_name")
     @NotEmpty
-    @Length(max=MAX_LENGTH_LAST_NAME)
+    @Length(max = MAX_LENGTH_LAST_NAME)
     private String lastName;
 
     @Column(name = "account_expired")
@@ -87,11 +97,11 @@ public class User implements UserDetails, Serializable {
     @Column(name = "credentials_expired")
     private boolean credentialsExpired = false;
 
-    @Column(name = "provider_id", length =25)
+    @Column(name = "provider_id", length = 25)
     @Enumerated(EnumType.STRING)
     private SignInProvider signInProvider;
 
-    @Column(name = "user_key", length =25)
+    @Column(name = "user_key", length = 25)
     private String userKey;
 
     @Column(name = "has_avatar")
@@ -143,54 +153,6 @@ public class User implements UserDetails, Serializable {
         this.password = password;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public UserProfile getUserProfile() {
-        return userProfile;
-    }
-
-    public void setUserProfile(UserProfile userProfile) {
-        this.userProfile = userProfile;
-    }
-
-    public UserData getUserData() {
-        return userData;
-    }
-
-    public void setUserData(UserData userData) {
-        this.userData = userData;
-    }
-
-    public SignInProvider getSignInProvider() {
-        return signInProvider;
-    }
-
-    public void setSignInProvider(SignInProvider signInProvider) {
-        this.signInProvider = signInProvider;
-    }
-
     @Override
     public Collection<Authority> getAuthorities() {
         return authorities;
@@ -205,16 +167,10 @@ public class User implements UserDetails, Serializable {
             return false;
         }
         if (authorities == null) {
-            logger.debug("authorities is null for user " + this);
+            log.debug("authorities is null for user " + this);
         }
 
-        for (Authority authority : authorities) {
-            if (targetAuthority.equals(authority.getAuthority())) {
-                return true;
-            }
-        }
-
-        return false;
+        return authorities.stream().anyMatch(authority -> targetAuthority.equals(authority.getAuthority()));
     }
 
     @Override
@@ -241,32 +197,17 @@ public class User implements UserDetails, Serializable {
         this.enabled = enabled;
     }
 
-    public String getUserKey() {
-        return userKey;
-    }
-
-    public void setUserKey(String userKey) {
-        this.userKey = userKey;
-    }
-
-    public boolean hasAvatar() {
-        return hasAvatar;
-    }
-
-    public void setHasAvatar(boolean hasAvatar) {
-        this.hasAvatar = hasAvatar;
-    }
 
     // @formatter:off
-    
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
                 ", username=" + username +
                 ", email=" + email +
-                ", firstName=" + firstName  +
-                ", lastName=" + lastName  +
+                ", firstName=" + firstName +
+                ", lastName=" + lastName +
                 ", accountExpired=" + accountExpired +
                 ", accountLocked=" + accountLocked +
                 ", credentialsExpired=" + credentialsExpired +
@@ -290,5 +231,5 @@ public class User implements UserDetails, Serializable {
     }
 
     // @formatter:on
-    
+
 }

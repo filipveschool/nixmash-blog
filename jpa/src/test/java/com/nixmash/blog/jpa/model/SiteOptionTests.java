@@ -9,7 +9,7 @@ import com.nixmash.blog.jpa.enums.DataConfigProfile;
 import com.nixmash.blog.jpa.enums.UserRegistration;
 import com.nixmash.blog.jpa.exceptions.SiteOptionNotFoundException;
 import com.nixmash.blog.jpa.repository.SiteOptionRepository;
-import com.nixmash.blog.jpa.service.SiteService;
+import com.nixmash.blog.jpa.service.interfaces.SiteService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,15 +1,17 @@
 package com.nixmash.blog.jpa.dto;
 
 import com.nixmash.blog.jpa.model.Authority;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
-/**
- * Created by daveburke on 4/12/16.
- */
+@Getter
+@Setter
 public class RoleDTO {
 
     private Long id;
+
     private boolean isLocked = false;
 
     @NotEmpty
@@ -19,29 +21,6 @@ public class RoleDTO {
     public RoleDTO() {
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getAuthority() {
-        return authority;
-    }
-
-    public void setAuthority(String authority) {
-        this.authority = authority;
-    }
-
-    public boolean getLocked() {
-        return isLocked;
-    }
-
-    public void setLocked(boolean locked) {
-        isLocked = locked;
-    }
 
     @Override
     public String toString() {

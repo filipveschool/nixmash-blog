@@ -1,13 +1,14 @@
 package com.nixmash.blog.jpa.dto;
 
 import com.nixmash.blog.jpa.model.SiteOption;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
+@Getter
+@Setter
 public class SiteOptionDTO {
-
-    public SiteOptionDTO() {
-    }
 
     private Long optionId;
 
@@ -22,33 +23,8 @@ public class SiteOptionDTO {
         this.value = value;
     }
 
-    // region getter setters
-
-    public Long getOptionId() {
-        return optionId;
+    public SiteOptionDTO() {
     }
-
-    public void setOptionId(Long optionId) {
-        this.optionId = optionId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    // endregion
 
     // region toString()
 

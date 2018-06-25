@@ -1,11 +1,25 @@
 package com.nixmash.blog.jpa.model;
 
-import javax.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedNativeQueries;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Set;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "tags")
 @NamedNativeQueries({
@@ -22,9 +36,19 @@ public class Tag implements Serializable {
 
     private static final long serialVersionUID = -5531381747015731447L;
 
+    @Id
+    @GeneratedValue(strategy = IDENTITY)
+    @Column(name = "tag_id", nullable = false)
     private long tagId;
+
+    @Basic
+    @Column(name = "tag_value", nullable = false, length = 50)
     private String tagValue;
+
+    @ManyToMany(mappedBy = "tags")
     private Set<Post> posts;
+
+    @Transient
     private int tagCount = 0;
 
     public Tag() {
@@ -37,45 +61,6 @@ public class Tag implements Serializable {
     public Tag(Long tagId, String tagValue) {
         this.tagId = tagId;
         this.tagValue = tagValue;
-    }
-
-    @Id
-    @GeneratedValue(strategy = IDENTITY)
-    @Column(name = "tag_id", nullable = false)
-    public long getTagId() {
-        return tagId;
-    }
-
-    public void setTagId(long tagId) {
-        this.tagId = tagId;
-    }
-
-    @Basic
-    @Column(name = "tag_value", nullable = false, length = 50)
-    public String getTagValue() {
-        return tagValue;
-    }
-
-    public void setTagValue(String tagValue) {
-        this.tagValue = tagValue;
-    }
-
-    @ManyToMany(mappedBy = "tags")
-    public Set<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(Set<Post> posts) {
-        this.posts = posts;
-    }
-
-    @Transient
-    public int getTagCount() {
-        return tagCount;
-    }
-
-    public void setTagCount(int tagCount) {
-        this.tagCount = tagCount;
     }
 
     @Override

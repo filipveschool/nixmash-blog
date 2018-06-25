@@ -1,11 +1,8 @@
-package com.nixmash.blog.mail.service;
+package com.nixmash.blog.mail.service.interfaces;
 
 import com.nixmash.blog.jpa.model.User;
 import com.nixmash.blog.mail.dto.MailDTO;
 
-/**
- * Created by daveburke on 4/28/16.
- */
 public interface FmMailService {
 
     void sendResetPasswordMail(User user, String token);

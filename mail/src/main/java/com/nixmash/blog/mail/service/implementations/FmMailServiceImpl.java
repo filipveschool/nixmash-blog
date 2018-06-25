@@ -1,4 +1,4 @@
-package com.nixmash.blog.mail.service;
+package com.nixmash.blog.mail.service.implementations;
 
 import com.nixmash.blog.jpa.common.ApplicationSettings;
 import com.nixmash.blog.jpa.model.User;
@@ -6,11 +6,11 @@ import com.nixmash.blog.mail.common.MailSettings;
 import com.nixmash.blog.mail.components.MailSender;
 import com.nixmash.blog.mail.components.MailUI;
 import com.nixmash.blog.mail.dto.MailDTO;
+import com.nixmash.blog.mail.service.interfaces.FmMailService;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.MailSendException;
@@ -26,38 +26,36 @@ import java.text.MessageFormat;
 import java.util.Hashtable;
 import java.util.Map;
 
+@Slf4j
 @SuppressWarnings("Duplicates")
 @Service("fmMailService")
 public class FmMailServiceImpl implements FmMailService {
 
-    private static final Logger logger = LoggerFactory.getLogger(FmMailServiceImpl.class);
     private static final String CONTACT_EMAIL_SUBJECT = "mail.contact.subject";
     private static final String CONTACT_EMAIL_GREETING = "mail.contact.greeting";
     private static final String EMAIL_SITE_USER_SERVICES = "mail.site.user.services";
 
-    final private MailSender mailSender;
-    final private MailSettings mailSettings;
+    @Autowired
+    private MailSender mailSender;
 
-    private final ApplicationSettings applicationSettings;
-    private final Configuration fm;
-    private final Environment environment;
-    private final MailUI mailUI;
+    @Autowired
+    private MailSettings mailSettings;
+
+    @Autowired
+    private ApplicationSettings applicationSettings;
+
+    @Autowired
+    private Configuration fm;
+
+    @Autowired
+    private Environment environment;
+
+    @Autowired
+    private MailUI mailUI;
 
 //    @Value("${mail.contact.body.type}")
 //    private MailDTO.Type mailType;
-
-    @Autowired
-    public FmMailServiceImpl(MailSender mailSender,
-                             MailSettings mailSettings, ApplicationSettings applicationSettings, Configuration fm, Environment environment, MailUI mailUI) {
-        this.mailSender = mailSender;
-        this.mailSettings = mailSettings;
-        this.applicationSettings = applicationSettings;
-        this.fm = fm;
-        this.environment = environment;
-        this.mailUI = mailUI;
-    }
-
-
+    
     @Override
     public void sendResetPasswordMail(User user, String token) {
         try {
@@ -104,15 +102,15 @@ public class FmMailServiceImpl implements FmMailService {
                         html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
                         message.setText(html, true);
                     } catch (IOException | TemplateException e) {
-                        logger.error("Problem merging reset password mail template : " + e.getMessage());
+                        log.error("Problem merging reset password mail template : " + e.getMessage());
                     }
 
-                    logger.info(String.format("Reset Password email sent to: %s", String.format("%s %s", user.getFirstName(), user.getLastName())));
+                    log.info(String.format("Reset Password email sent to: %s", String.format("%s %s", user.getFirstName(), user.getLastName())));
                 }
 
             });
         } catch (MailSendException e) {
-            logger.error("Reset Password Email Exception: " + e.getMessage());
+            log.error("Reset Password Email Exception: " + e.getMessage());
         }
 
     }
@@ -159,7 +157,7 @@ public class FmMailServiceImpl implements FmMailService {
                             html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
                             message.setText(html, true);
                         } catch (IOException | TemplateException e) {
-                            logger.error("Problem merging contact mail template : " + e.getMessage());
+                            log.error("Problem merging contact mail template : " + e.getMessage());
                         }
 
                         break;
@@ -167,10 +165,10 @@ public class FmMailServiceImpl implements FmMailService {
                         message.setText(body);
                         break;
                 }
-                logger.info(String.format("Contact Email sent from: %s", mailDTO.getFrom()));
+                log.info(String.format("Contact Email sent from: %s", mailDTO.getFrom()));
             });
         } catch (MailSendException e) {
-            logger.error("Contact Email Exception: " + e.getMessage());
+            log.error("Contact Email Exception: " + e.getMessage());
         }
 
     }
@@ -221,15 +219,15 @@ public class FmMailServiceImpl implements FmMailService {
                         html = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
                         message.setText(html, true);
                     } catch (IOException | TemplateException e) {
-                        logger.error("Problem merging user verification mail template : " + e.getMessage());
+                        log.error("Problem merging user verification mail template : " + e.getMessage());
                     }
 
-                    logger.info(String.format("User Verification email sent to: %s", String.format("%s %s", user.getFirstName(), user.getLastName())));
+                    log.info(String.format("User Verification email sent to: %s", String.format("%s %s", user.getFirstName(), user.getLastName())));
                 }
 
             });
         } catch (MailSendException e) {
-            logger.error("User Verification Email Exception: " + e.getMessage());
+            log.error("User Verification Email Exception: " + e.getMessage());
         }
 
     }

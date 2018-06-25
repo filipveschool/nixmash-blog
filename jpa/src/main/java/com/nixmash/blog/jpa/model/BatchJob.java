@@ -1,90 +1,51 @@
 package com.nixmash.blog.jpa.model;
 
-import javax.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.sql.Timestamp;
 
-/**
- * Created by daveburke on 12/2/16.
- */
+@Getter
+@Setter
 @Entity
 @Table(name = "v_batch_job_report")
 public class BatchJob {
-    private long jobId;
-    private String jobName;
-    private Timestamp startTime;
-    private Timestamp endTime;
-    private String status;
-    private String exitCode;
-    private String exitMessage;
 
     @Id
     @Column(name = "JOB_INSTANCE_ID", nullable = false)
-    public long getJobId() {
-        return jobId;
-    }
-
-    public void setJobId(long jobId) {
-        this.jobId = jobId;
-    }
+    private long jobId;
 
     @Basic
     @Column(name = "JOB_NAME", nullable = false, length = 100)
-    public String getJobName() {
-        return jobName;
-    }
-
-    public void setJobName(String jobName) {
-        this.jobName = jobName;
-    }
+    private String jobName;
 
     @Basic
     @Column(name = "START_TIME", nullable = true)
-    public Timestamp getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Timestamp startTime) {
-        this.startTime = startTime;
-    }
+    private Timestamp startTime;
 
     @Basic
     @Column(name = "END_TIME", nullable = true)
-    public Timestamp getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Timestamp endTime) {
-        this.endTime = endTime;
-    }
+    private Timestamp endTime;
 
     @Basic
     @Column(name = "STATUS", nullable = true, length = 10)
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    private String status;
 
     @Basic
     @Column(name = "EXIT_CODE", nullable = true, length = 2500)
-    public String getExitCode() {
-        return exitCode;
-    }
-
-    public void setExitCode(String exitCode) {
-        this.exitCode = exitCode;
-    }
+    private String exitCode;
 
     @Basic
     @Column(name = "EXIT_MESSAGE", nullable = true, length = 2500)
-    public String getExitMessage() {
-        return exitMessage;
-    }
+    private String exitMessage;
 
-    public void setExitMessage(String exitMessage) {
-        this.exitMessage = exitMessage;
+    public BatchJob() {
+
     }
 
     @Override

@@ -15,119 +15,37 @@
  */
 package com.nixmash.blog.solr.dto;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.geo.Point;
 
 import java.io.Serializable;
 import java.util.List;
 
+@Getter
+@Setter
 public class ProductDTO implements Serializable {
 
-	private static final long serialVersionUID = -2572547753224433591L;
+    private static final long serialVersionUID = -2572547753224433591L;
 
-	private String id;
-	private String name;
-	private List<String> categories;
-	private List<String> features;
-	private Float weight;
-	private Float price;
-	private Integer popularity;
-	private boolean available;
-	private String doctype;
-	private Point point;
-	private String location;
+    private String id;
+    private String name;
+    private List<String> categories;
+    private List<String> features;
+    private Float weight;
+    private Float price;
+    private Integer popularity;
+    private boolean available;
+    private String doctype;
+    private Point point;
+    private String location;
 
-	public String getId() {
-		return id;
-	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    @Override
+    public String toString() {
+        return "Product [id=" + id + ", name=" + name + ", categories=" + categories + ", features =" + features + ", weight=" + weight + ", price="
+                + price + ", popularity=" + popularity + ", available=" + available + ", doctype=" + doctype + "]";
+    }
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public List<String> getCategories() {
-		return categories;
-	}
-
-	public void setCategories(List<String> categories) {
-		this.categories = categories;
-	}
-
-	public Float getWeight() {
-		return weight;
-	}
-
-	public void setWeight(Float weight) {
-		this.weight = weight;
-	}
-
-	public Float getPrice() {
-		return price;
-	}
-
-	public void setPrice(Float price) {
-		this.price = price;
-	}
-
-	public Integer getPopularity() {
-		return popularity;
-	}
-
-	public void setPopularity(Integer popularity) {
-		this.popularity = popularity;
-	}
-
-	public boolean isAvailable() {
-		return available;
-	}
-
-	public void setAvailable(boolean available) {
-		this.available = available;
-	}
-
-	public String getDoctype() {
-		return doctype;
-	}
-
-	public void setDoctype(String doctype) {
-		this.doctype = doctype;
-	}
-
-	@Override
-	public String toString() {
-		return "Product [id=" + id + ", name=" + name + ", categories=" + categories + ", features =" + features +  ", weight=" + weight + ", price="
-				+ price + ", popularity=" + popularity + ", available=" + available + ", doctype=" + doctype + "]";
-	}
-
-	public List<String> getFeatures() {
-		return features;
-	}
-
-	public void setFeatures(List<String> features) {
-		this.features = features;
-	}
-
-	public Point getPoint() {
-		return point;
-	}
-
-	public void setPoint(Point point) {
-		this.point = point;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
 
 }

@@ -4,6 +4,7 @@ import com.nixmash.blog.jpa.SpringDataTests;
 import com.nixmash.blog.jpa.TestUtil;
 import com.nixmash.blog.jpa.dto.UserDTO;
 import com.nixmash.blog.jpa.model.User;
+import com.nixmash.blog.jpa.service.interfaces.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

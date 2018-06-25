@@ -1,7 +1,7 @@
 package com.nixmash.blog.solr;
 
 import com.nixmash.blog.jpa.model.Post;
-import com.nixmash.blog.jpa.service.PostService;
+import com.nixmash.blog.jpa.service.interfaces.PostService;
 import com.nixmash.blog.solr.model.PostDoc;
 import com.nixmash.blog.solr.repository.custom.CustomPostDocRepository;
 import com.nixmash.blog.solr.service.PostDocService;

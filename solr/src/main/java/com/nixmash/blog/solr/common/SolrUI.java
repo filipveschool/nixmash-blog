@@ -1,7 +1,7 @@
 package com.nixmash.blog.solr.common;
 
 import com.nixmash.blog.jpa.model.Post;
-import com.nixmash.blog.jpa.service.PostService;
+import com.nixmash.blog.jpa.service.interfaces.PostService;
 import com.nixmash.blog.solr.enums.SolrDocType;
 import com.nixmash.blog.solr.exceptions.GeoLocationException;
 import com.nixmash.blog.solr.model.PostDoc;

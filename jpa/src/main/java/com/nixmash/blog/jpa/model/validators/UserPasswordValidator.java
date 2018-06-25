@@ -1,10 +1,10 @@
 package com.nixmash.blog.jpa.model.validators;
 
+
 import com.nixmash.blog.jpa.dto.UserPasswordDTO;
 import com.nixmash.blog.jpa.model.User;
-import com.nixmash.blog.jpa.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.nixmash.blog.jpa.service.interfaces.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -12,16 +12,12 @@ import org.springframework.validation.Validator;
 
 import java.util.Optional;
 
+@Slf4j
 @Component
 public class UserPasswordValidator implements Validator {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserPasswordValidator.class);
-    private final UserService userService;
-
     @Autowired
-    public UserPasswordValidator(UserService userService) {
-        this.userService = userService;
-    }
+    private UserService userService;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -30,7 +26,7 @@ public class UserPasswordValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        logger.debug("Validating {}", target);
+        log.debug("Validating {}", target);
         UserPasswordDTO form = (UserPasswordDTO) target;
         validatePasswords(errors, form);
         preventDemoUserUpdate(errors, form);

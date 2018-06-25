@@ -1,9 +1,8 @@
-package com.nixmash.blog.jpa.service;
+package com.nixmash.blog.jpa.service.implementations;
 
 import com.nixmash.blog.jpa.model.BatchJob;
-import com.nixmash.blog.jpa.model.GitHubStats;
 import com.nixmash.blog.jpa.repository.BatchJobRepository;
-import com.nixmash.blog.jpa.repository.GitHubRepository;
+import com.nixmash.blog.jpa.service.interfaces.StatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -15,19 +14,8 @@ import java.util.List;
 @Transactional
 public class StatServiceImpl implements StatService {
 
-    private final GitHubRepository gitHubRepository;
-    private final BatchJobRepository batchJobRepository;
-
     @Autowired
-    public StatServiceImpl(GitHubRepository gitHubRepository, BatchJobRepository batchJobRepository) {
-        this.gitHubRepository = gitHubRepository;
-        this.batchJobRepository = batchJobRepository;
-    }
-
-    @Override
-    public GitHubStats getCurrentGitHubStats() {
-        return gitHubRepository.findTopByOrderByStatDateDesc();
-    }
+    private BatchJobRepository batchJobRepository;
 
     @Override
     public List<BatchJob> getBatchJobsByJob(String jobName) {

@@ -10,7 +10,7 @@ import com.nixmash.blog.jpa.model.Category;
 import com.nixmash.blog.jpa.model.Post;
 import com.nixmash.blog.jpa.model.PostMeta;
 import com.nixmash.blog.jpa.model.Tag;
-import com.nixmash.blog.jpa.service.PostService;
+import com.nixmash.blog.jpa.service.interfaces.PostService;
 import com.nixmash.blog.jpa.utils.PostTestUtils;
 import com.nixmash.blog.mvc.AbstractContext;
 import com.nixmash.blog.mvc.MvcTestUtil;

@@ -1,16 +1,25 @@
-package com.nixmash.blog.jpa.service;
+package com.nixmash.blog.jpa.service.implementations;
 
 import com.nixmash.blog.jpa.dto.RoleDTO;
 import com.nixmash.blog.jpa.dto.UserDTO;
 import com.nixmash.blog.jpa.dto.UserPasswordDTO;
 import com.nixmash.blog.jpa.enums.ResetPasswordResult;
 import com.nixmash.blog.jpa.enums.Role;
-import com.nixmash.blog.jpa.model.*;
-import com.nixmash.blog.jpa.repository.*;
+import com.nixmash.blog.jpa.model.Authority;
+import com.nixmash.blog.jpa.model.CurrentUser;
+import com.nixmash.blog.jpa.model.User;
+import com.nixmash.blog.jpa.model.UserConnection;
+import com.nixmash.blog.jpa.model.UserData;
+import com.nixmash.blog.jpa.model.UserToken;
+import com.nixmash.blog.jpa.repository.AuthorityRepository;
+import com.nixmash.blog.jpa.repository.UserConnectionRepository;
+import com.nixmash.blog.jpa.repository.UserDataRepository;
+import com.nixmash.blog.jpa.repository.UserRepository;
+import com.nixmash.blog.jpa.repository.UserTokenRepository;
+import com.nixmash.blog.jpa.service.interfaces.UserService;
 import com.nixmash.blog.jpa.utils.UserUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,66 +30,68 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
+@Slf4j
 @Service("userService")
 @Transactional
 public class UserServiceImpl implements UserService {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
-    private final UserRepository userRepository;
-    private final UserDataRepository userDataRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    private final AuthorityRepository authorityRepository;
-    private final UserConnectionRepository userConnectionRepository;
-    private final UserTokenRepository userTokenRepository;
+    @Autowired
+    private UserDataRepository userDataRepository;
+
+    @Autowired
+    private AuthorityRepository authorityRepository;
+
+    @Autowired
+    private UserConnectionRepository userConnectionRepository;
+
+    @Autowired
+    private UserTokenRepository userTokenRepository;
 
 
     @PersistenceContext
     private EntityManager em;
 
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, UserDataRepository userDataRepository, AuthorityRepository authorityRepository,
-                           UserConnectionRepository userConnectionRepository, UserTokenRepository userTokenRepository) {
-        this.userRepository = userRepository;
-        this.userDataRepository = userDataRepository;
-        this.authorityRepository = authorityRepository;
-        this.userConnectionRepository = userConnectionRepository;
-        this.userTokenRepository = userTokenRepository;
-    }
-
     @Transactional(readOnly = true)
     @Override
     public Optional<User> getUserById(long id) {
-        logger.debug("Getting user={}", id);
+        log.debug("Getting user={}", id);
         return Optional.ofNullable(userRepository.findById(id));
     }
 
     @Transactional(readOnly = true)
     @Override
     public User getUserByUsername(String username) {
-        logger.debug("Getting user={}", username);
+        log.debug("Getting user={}", username);
         return userRepository.findByUsername(username);
     }
 
     @Transactional(readOnly = true)
     @Override
     public Optional<User> getByEmail(String email) {
-        logger.debug("Getting user by email={}", email);
+        log.debug("Getting user by email={}", email);
         return userRepository.findOneByEmail(email);
     }
 
     @Transactional(readOnly = true)
     @Override
     public Optional<User> getByUserKey(String userKey) {
-        logger.debug("Getting user by userkey={}", userKey);
+        log.debug("Getting user by userkey={}", userKey);
         return userRepository.findOneByUserKey(userKey);
     }
 
     @Transactional(readOnly = true)
     @Override
     public Collection<User> getAllUsers() {
-        logger.debug("Getting all users");
+        log.debug("Getting all users");
         return userRepository.findAll();
     }
 
@@ -103,7 +114,7 @@ public class UserServiceImpl implements UserService {
         UserData userData = userDataRepository.save(UserUtils.newRegisteredUserData(saved));
         saved.setUserData(userData);
 
-        for (Authority authority : userDTO.getAuthorities()) {
+        for (Authority authority: userDTO.getAuthorities()) {
             Authority _authority = authorityRepository.findByAuthority(authority.getAuthority());
             saved.getAuthorities().add(_authority);
         }
@@ -125,7 +136,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean canAccessUser(CurrentUser currentUser, String username) {
-        logger.info("Checking if user={} has access to user={}", currentUser, username);
+        log.info("Checking if user={} has access to user={}", currentUser, username);
         return currentUser != null
                 && (currentUser.getUser().hasAuthority(Role.ROLE_ADMIN) ||
                 currentUser.getUsername().equals(username));
@@ -134,7 +145,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     @Override
     public UserConnection getUserConnectionByUserId(String userId) {
-        logger.debug("Getting userConnection={}", userId);
+        log.debug("Getting userConnection={}", userId);
         return userConnectionRepository.findByUserId(userId);
     }
 
@@ -200,7 +211,7 @@ public class UserServiceImpl implements UserService {
         if (userDTO.isUpdateChildren()) {
 
             user.getAuthorities().clear();
-            for (Authority authority : userDTO.getAuthorities()) {
+            for (Authority authority: userDTO.getAuthorities()) {
                 Authority match = authorityRepository.findOne(authority.getId());
                 if (!user.getAuthorities().contains(match)) {
                     user.getAuthorities().add(match);
@@ -256,7 +267,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteAuthority(Authority authority, Collection<User> users) {
         if (users != null) {
-            for (User user : users) {
+            for (User user: users) {
                 user.getAuthorities().remove(authority);
             }
         }

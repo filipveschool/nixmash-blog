@@ -8,12 +8,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Created by daveburke on 5/31/16.
- */
+@Repository
 public interface PostRepository extends PagingAndSortingRepository<Post, Long> {
 
     Post findByPostId(Long postId) throws DataAccessException;

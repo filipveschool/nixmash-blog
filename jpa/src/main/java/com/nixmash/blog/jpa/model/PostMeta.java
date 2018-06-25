@@ -5,100 +5,48 @@ import com.nixmash.blog.jpa.enums.TwitterCardType;
 import javax.persistence.*;
 import java.io.Serializable;
 
-/**
- * Created by daveburke on 3/7/17.
- */
+import lombok.Getter;
+import lombok.Setter;
+@Getter
+@Setter
 @Entity
 @Table(name = "post_meta")
 public class PostMeta implements Serializable {
 
     private static final long serialVersionUID = 7743331633690910405L;
-    private Long postId;
-    private String twitterCreator;
-    private String twitterImage;
-    private String twitterDescription;
-    private TwitterCardType twitterCardType;
-
-    private String twitterTitle;
-    private String twitterUrl;
-    private String twitterSite;
 
     @Id
     @Column(name = "post_id")
-    public Long getPostId() {
-        return postId;
-    }
+    private Long postId;
 
-    public void setPostId(Long postId) {
-        this.postId = postId;
-    }
+    @Basic
+    @Column(name = "twitter_creator")
+    private String twitterCreator;
+
+    @Basic
+    @Column(name = "twitter_image")
+    private String twitterImage;
+
+    @Basic
+    @Column(name = "twitter_description")
+    private String twitterDescription;
 
     @Basic
     @Column(name = "twitter_card")
     @Enumerated(EnumType.STRING)
-    public TwitterCardType getTwitterCardType() {
-        return twitterCardType;
-    }
-
-    public void setTwitterCardType(TwitterCardType twitterCardType) {
-        this.twitterCardType = twitterCardType;
-    }
-
-    @Basic
-    @Column(name = "twitter_creator")
-    public String getTwitterCreator() {
-        return twitterCreator;
-    }
-
-    public void setTwitterCreator(String twitterCreator) {
-        this.twitterCreator = twitterCreator;
-    }
-
-    @Basic
-    @Column(name = "twitter_image")
-    public String getTwitterImage() {
-        return twitterImage;
-    }
-
-    public void setTwitterImage(String twitterImage) {
-        this.twitterImage = twitterImage;
-    }
-
-    @Basic
-    @Column(name = "twitter_description")
-    public String getTwitterDescription() {
-        return twitterDescription;
-    }
-
-    public void setTwitterDescription(String twitterDescription) {
-        this.twitterDescription = twitterDescription;
-    }
+    private TwitterCardType twitterCardType;
 
     @Transient
-    public String getTwitterTitle() {
-        return twitterTitle;
-    }
-
-    public void setTwitterTitle(String twitterTitle) {
-        this.twitterTitle = twitterTitle;
-    }
+    private String twitterTitle;
 
     @Transient
-    public String getTwitterUrl() {
-        return twitterUrl;
-    }
-
-    public void setTwitterUrl(String twitterUrl) {
-        this.twitterUrl = twitterUrl;
-    }
+    private String twitterUrl;
 
     @Transient
-    public String getTwitterSite() {
-        return twitterSite;
-    }
+    private String twitterSite;
 
-    public void setTwitterSite(String twitterSite) {
-        this.twitterSite = twitterSite;
+    public PostMeta(){
+
     }
 
     public void update(String twitterImage, String twitterCreator, String twitterDescription, TwitterCardType twitterCardType) {

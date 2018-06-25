@@ -3,7 +3,7 @@ package com.nixmash.blog.jpa.exceptions;
 /**
  * Created by daveburke on 6/15/16.
  */
-public class PostNotFoundException extends Exception {
+public class PostNotFoundException extends RuntimeException {
 
     private static final long serialVersionUID = 3613978896775863909L;
 

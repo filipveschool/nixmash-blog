@@ -2,7 +2,7 @@ package com.nixmash.blog.mvc.security;
 
 import com.nixmash.blog.jpa.model.CurrentUser;
 import com.nixmash.blog.jpa.model.User;
-import com.nixmash.blog.jpa.service.UserService;
+import com.nixmash.blog.jpa.service.interfaces.UserService;
 import com.nixmash.blog.mvc.AbstractContext;
 import com.nixmash.blog.mvc.controller.UserController;
 import org.junit.Before;

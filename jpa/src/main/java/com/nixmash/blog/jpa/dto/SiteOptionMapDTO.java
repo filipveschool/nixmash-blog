@@ -1,16 +1,18 @@
 package com.nixmash.blog.jpa.dto;
 
 import com.nixmash.blog.jpa.enums.UserRegistration;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
-public class SiteOptionMapDTO implements Serializable{
-    private static final long serialVersionUID = -5465065342755162883L;
+@Getter
+@Setter
+public class SiteOptionMapDTO implements Serializable {
 
-    public SiteOptionMapDTO() {
-    }
+    private static final long serialVersionUID = -5465065342755162883L;
 
     @NotEmpty
     private String siteName;
@@ -25,56 +27,15 @@ public class SiteOptionMapDTO implements Serializable{
 
     private UserRegistration userRegistration;
 
-    // region getters setters
-
-    public String getSiteName() {
-        return siteName;
+    public SiteOptionMapDTO() {
     }
-
-    public void setSiteName(String siteName) {
-        this.siteName = siteName;
-    }
-
-    public String getSiteDescription() {
-        return siteDescription;
-    }
-
-    public void setSiteDescription(String siteDescription) {
-        this.siteDescription = siteDescription;
-    }
-
-    public Boolean getAddGoogleAnalytics() {
-        return addGoogleAnalytics;
-    }
-
-    public void setAddGoogleAnalytics(Boolean addGoogleAnalytics) {
-        this.addGoogleAnalytics = addGoogleAnalytics;
-    }
-
-    public String getGoogleAnalyticsTrackingId() {
-        return googleAnalyticsTrackingId;
-    }
-
-    public void setGoogleAnalyticsTrackingId(String googleAnalyticsTrackingId) {
-        this.googleAnalyticsTrackingId = googleAnalyticsTrackingId;
-    }
-
-    public UserRegistration getUserRegistration() {
-        return userRegistration;
-    }
-
-    public void setUserRegistration(UserRegistration userRegistration) {
-        this.userRegistration = userRegistration;
-    }
-
-    // endregion
 
     public static Builder withGeneralSettings(
             String siteName,
             String siteDescription,
             Boolean addGoogleAnalytics,
             String googleAnalyticsTrackingId,
-            UserRegistration userRegistration){
+            UserRegistration userRegistration) {
 
         return new Builder(siteName, siteDescription, addGoogleAnalytics, googleAnalyticsTrackingId, userRegistration);
     }

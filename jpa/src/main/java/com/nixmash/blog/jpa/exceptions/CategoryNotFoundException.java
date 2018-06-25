@@ -1,9 +1,7 @@
 package com.nixmash.blog.jpa.exceptions;
 
-/**
- * Created by daveburke on 6/15/16.
- */
-public class CategoryNotFoundException extends Exception {
+
+public class CategoryNotFoundException extends RuntimeException {
 
     private static final long serialVersionUID = -9070542392426394574L;
     private String msg;

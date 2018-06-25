@@ -2,34 +2,20 @@ package com.nixmash.blog.jpa.service.implementations;
 
 import com.google.common.collect.Lists;
 import com.nixmash.blog.jpa.annotations.CachePostUpdate;
-import com.nixmash.blog.jpa.common.ApplicationSettings;
 import com.nixmash.blog.jpa.dto.AlphabetDTO;
-import com.nixmash.blog.jpa.dto.CategoryDTO;
 import com.nixmash.blog.jpa.dto.PostDTO;
 import com.nixmash.blog.jpa.dto.TagDTO;
-import com.nixmash.blog.jpa.enums.ContentType;
-import com.nixmash.blog.jpa.enums.PostDisplayType;
 import com.nixmash.blog.jpa.enums.PostType;
-import com.nixmash.blog.jpa.enums.TwitterCardType;
-import com.nixmash.blog.jpa.exceptions.CategoryNotFoundException;
 import com.nixmash.blog.jpa.exceptions.DuplicatePostNameException;
 import com.nixmash.blog.jpa.exceptions.PostNotFoundException;
-import com.nixmash.blog.jpa.exceptions.TagNotFoundException;
 import com.nixmash.blog.jpa.model.Category;
-import com.nixmash.blog.jpa.model.CurrentUser;
-import com.nixmash.blog.jpa.model.Like;
 import com.nixmash.blog.jpa.model.Post;
-import com.nixmash.blog.jpa.model.PostImage;
-import com.nixmash.blog.jpa.model.PostMeta;
 import com.nixmash.blog.jpa.model.Tag;
 import com.nixmash.blog.jpa.repository.CategoryRepository;
 import com.nixmash.blog.jpa.repository.LikeRepository;
-import com.nixmash.blog.jpa.repository.PostImageRepository;
-import com.nixmash.blog.jpa.repository.PostMetaRepository;
 import com.nixmash.blog.jpa.repository.PostRepository;
 import com.nixmash.blog.jpa.repository.TagRepository;
 import com.nixmash.blog.jpa.service.interfaces.PostService;
-import com.nixmash.blog.jpa.service.interfaces.TagService;
 import com.nixmash.blog.jpa.utils.PostUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +25,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,10 +36,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
-
-import static java.util.Comparator.comparing;
 
 
 @Slf4j

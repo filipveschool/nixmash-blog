@@ -8,42 +8,38 @@ import com.nixmash.blog.jpa.model.Category;
 import com.nixmash.blog.jpa.model.CurrentUser;
 import com.nixmash.blog.jpa.model.Post;
 import com.nixmash.blog.jpa.model.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
-/**
- * Created by daveburke on 6/1/16.
- */
+@Slf4j
 public class PostUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(PostUtils.class);
     private static final Pattern REMOVE_TAGS = Pattern.compile("<.+?>");
-
 
     public static Post postDtoToPost(PostDTO dto) {
 
-        return Post.getBuilder(dto.getUserId(),
-                dto.getPostTitle(),
-                dto.getPostName(),
-                dto.getPostLink(),
-                dto.getPostContent(),
-                dto.getPostType(),
-                dto.getDisplayType())
-                .isPublished(dto.getIsPublished())
-                .postSource(dto.getPostSource())
-                .postImage(dto.getPostImage())
-                .build();
+        Post post = new Post();
+        post.setUserId(dto.getUserId());
+        post.setPostTitle(dto.getPostTitle());
+        post.setPostName(dto.getPostName());
+        post.setPostLink(dto.getPostLink());
+        post.setPostContent(dto.getPostContent());
+        post.setPostType(dto.getPostType());
+        post.setDisplayType(dto.getDisplayType());
+        post.setIsPublished(dto.getIsPublished());
+        post.setPostSource(dto.getPostSource());
+        post.setPostImage(dto.getPostImage());
+        return post;
     }
 
 //    public static Post postDtoToSolrPost(PostDTO dto) {
@@ -55,20 +51,22 @@ public class PostUtils {
 
     public static PostDTO postToPostDTO(Post post) {
 
-        return PostDTO.getBuilder(post.getUserId(),
-                post.getPostTitle(),
-                post.getPostName(),
-                post.getPostLink(),
-                post.getPostContent(),
-                post.getPostType(),
-                post.getDisplayType(),
-                post.getCategory().getCategoryId(), post.getPostMeta().getTwitterCardType())
-                .isPublished(post.getIsPublished())
-                .postSource(post.getPostSource())
-                .postImage(post.getPostImage())
-                .postId(post.getPostId())
-                .tags(tagsToTagDTOs(post.getTags()))
-                .build();
+        PostDTO postDTO = new PostDTO();
+        postDTO.setUserId(post.getUserId());
+        postDTO.setPostTitle(post.getPostTitle());
+        postDTO.setPostName(post.getPostName());
+        postDTO.setPostLink(post.getPostLink());
+        postDTO.setPostContent(post.getPostContent());
+        postDTO.setPostType(post.getPostType());
+        postDTO.setDisplayType(post.getDisplayType());
+        postDTO.setCategoryId(post.getCategory().getCategoryId());
+        postDTO.setTwitterCardType(post.getPostMeta().getTwitterCardType());
+        postDTO.setIsPublished(post.getIsPublished());
+        postDTO.setPostSource(post.getPostSource());
+        postDTO.setPostId(post.getPostId());
+        postDTO.setTags(tagsToTagDTOs(post.getTags()));
+        postDTO.setPostImage(post.getPostImage());
+        return postDTO;
     }
 
     public static String createPostSource(String url) {
@@ -80,7 +78,7 @@ public class PostUtils {
                 URL linkURL = new URL(url);
                 domain = linkURL.getHost();
             } catch (MalformedURLException e) {
-                logger.error("Malformed Url: " + e.getMessage());
+                log.error("Malformed Url: " + e.getMessage());
             }
         }
         return domain;
@@ -93,7 +91,7 @@ public class PostUtils {
             slugify = new Slugify();
             slug = slugify.slugify(title);
         } catch (IOException e) {
-            logger.error(String.format("IOException for title: %s -- Exception: %s", title, e.getMessage()));
+            log.error(String.format("IOException for title: %s -- Exception: %s", title, e.getMessage()));
         }
         return slug;
     }
@@ -133,11 +131,7 @@ public class PostUtils {
     }
 
     public static Set<TagDTO> tagsToTagDTOs(Set<Tag> tags) {
-        Set<TagDTO> tagDTOs = new LinkedHashSet<>();
-        for (Tag tag : tags) {
-            tagDTOs.add(new TagDTO(tag.getTagId(), tag.getTagValue()));
-        }
-        return tagDTOs;
+        return tags.stream().map(tag -> new TagDTO(tag.getTagId(), tag.getTagValue())).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     public static CategoryDTO categoryToCategoryDTO(Category category) {
@@ -146,36 +140,25 @@ public class PostUtils {
     }
 
     public static List<CategoryDTO> categoriesToCategoryDTOs(List<Category> categories) {
-        List<CategoryDTO> categoryDTOS = new ArrayList<>();
-        for (Category category : categories) {
-            categoryDTOS.add(new CategoryDTO(
-                    category.getCategoryId(), category.getCategoryValue(), category.getCategoryCount(),
-                    category.getIsActive(), category.getIsDefault()));
-        }
-        return categoryDTOS;
+        return categories.stream().map(category -> new CategoryDTO(
+                category.getCategoryId(), category.getCategoryValue(), category.getCategoryCount(),
+                category.getIsActive(), category.getIsDefault())).collect(Collectors.toList());
     }
 
     public static Set<Tag> tagsDTOsToTags(Set<TagDTO> tagDTOs) {
-        Set<Tag> tags = new LinkedHashSet<>();
-        for (TagDTO tagDTO : tagDTOs) {
-            tags.add(new Tag(tagDTO.getTagId(), tagDTO.getTagValue()));
-        }
-        return tags;
+        return tagDTOs.stream().map(tagDTO -> new Tag(tagDTO.getTagId(), tagDTO.getTagValue())).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     public static List<String> tagsToTagValues(Set<Tag> tags) {
-        List<String> tagValues = new ArrayList<>();
-        for (Tag tag : tags) {
-            tagValues.add(tag.getTagValue());
-        }
-        return tagValues;
+        //List<String> tagValues = tags.stream().map(Tag::getTagValue).collect(Collectors.toList());
+        return tags.stream().map(Tag::getTagValue).collect(Collectors.toList());
     }
 
 
     // region display content
 
     public static void printPosts(List<Post> posts) {
-        for (Post post :
+        for (Post post:
                 posts) {
             System.out.println(post.getPostTitle()
                     + "\n" + post.getPostContent() + " : " + post.getPostType() + "\n------------------------");

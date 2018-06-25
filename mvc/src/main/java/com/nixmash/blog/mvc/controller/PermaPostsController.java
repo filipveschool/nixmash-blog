@@ -5,7 +5,11 @@ import com.nixmash.blog.jpa.exceptions.PostCategoryNotSupportedException;
 import com.nixmash.blog.jpa.exceptions.PostNotFoundException;
 import com.nixmash.blog.jpa.model.CurrentUser;
 import com.nixmash.blog.jpa.model.Post;
+import com.nixmash.blog.jpa.model.PostImage;
 import com.nixmash.blog.jpa.model.PostMeta;
+import com.nixmash.blog.jpa.service.interfaces.PermaPostService;
+import com.nixmash.blog.jpa.service.interfaces.PostImageService;
+import com.nixmash.blog.jpa.service.interfaces.PostMetaService;
 import com.nixmash.blog.jpa.service.interfaces.PostService;
 import com.nixmash.blog.jpa.utils.PostUtils;
 import com.nixmash.blog.mail.service.interfaces.FmService;
@@ -14,6 +18,7 @@ import com.nixmash.blog.solr.service.PostDocService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,6 +42,17 @@ public class PermaPostsController {
     private static final String MORELIKETHIS_HEADING = "post.morelikethis.heading";
 
     private final PostService postService;
+
+    @Autowired
+    private PermaPostService permaPostService;
+
+    @Autowired
+    private PostMetaService postMetaService;
+
+    @Autowired
+    private PostImageService postImageService;
+
+
     private final PostDocService postDocService;
     private final FmService fmService;
     private final ApplicationSettings applicationSettings;
@@ -75,9 +91,9 @@ public class PermaPostsController {
     public String post(@PathVariable("postName") String postName, @RequestParam(value = "preview", required = false, defaultValue = "false") Boolean inPreviewMode, Model model, CurrentUser currentUser)
             throws PostNotFoundException {
 
-        Post post = postService.getPost(postName);
+        Post post = permaPostService.getPost(postName);
         Date postCreated = Date.from(post.getPostDate().toInstant());
-        post.setIsOwner(PostUtils.isPostOwner(currentUser, post.getUserId()));
+        post.setOwner(PostUtils.isPostOwner(currentUser, post.getUserId()));
         post.setPostContent(PostUtils.formatPostContent(post));
 
         if (!inPreviewMode) {
@@ -93,7 +109,7 @@ public class PermaPostsController {
                 }
             }
 
-            PostMeta postMeta = postService.buildTwitterMetaTagsForDisplay(post);
+            PostMeta postMeta = postMetaService.buildTwitterMetaTagsForDisplay(post);
             if (postMeta != null) {
                 model.addAttribute("twitterMetatags", fmService.getTwitterTemplate(postMeta));
             }

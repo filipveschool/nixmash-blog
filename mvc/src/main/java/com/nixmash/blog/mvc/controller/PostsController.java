@@ -5,7 +5,9 @@ import com.nixmash.blog.jpa.dto.PostQueryDTO;
 import com.nixmash.blog.jpa.enums.PostType;
 import com.nixmash.blog.jpa.exceptions.TagNotFoundException;
 import com.nixmash.blog.jpa.model.Tag;
+import com.nixmash.blog.jpa.service.interfaces.LikeService;
 import com.nixmash.blog.jpa.service.interfaces.PostService;
+import com.nixmash.blog.jpa.service.interfaces.TagService;
 import com.nixmash.blog.jsoup.service.JsoupService;
 import com.nixmash.blog.mail.service.interfaces.FmService;
 import com.nixmash.blog.mvc.components.WebUI;
@@ -68,6 +70,12 @@ public class PostsController {
     private final ApplicationSettings applicationSettings;
     private final FmService fmService;
     private final PostDocService postDocService;
+
+    @Autowired
+    private TagService tagService;
+
+    @Autowired
+    private LikeService likeService;
 
     // endregion
 
@@ -165,7 +173,7 @@ public class PostsController {
     @RequestMapping(value = "/tag/{tagValue}", method = GET)
     public String tags(@PathVariable("tagValue") String tagValue, Model model)
             throws TagNotFoundException, UnsupportedEncodingException {
-        Tag tag = postService.getTag(URLDecoder.decode(tagValue, "UTF-8"));
+        Tag tag = tagService.getTag(URLDecoder.decode(tagValue, "UTF-8"));
         boolean showMore = postService.getPublishedPostsByTagId(tag.getTagId()).size() > POST_PAGING_SIZE;
         model.addAttribute("tag", tag);
         model.addAttribute("showmore", showMore);
@@ -175,8 +183,8 @@ public class PostsController {
     @RequestMapping(value = "/likes/{userId}", method = GET)
     public String userLikes(@PathVariable("userId") long userId, Model model) {
         boolean showMore = false;
-        if (postService.getPostsByUserLikes(userId) != null)
-            showMore = postService.getPostsByUserLikes(userId).size() > POST_PAGING_SIZE;
+        if (likeService.getPostsByUserLikes(userId) != null)
+            showMore = likeService.getPostsByUserLikes(userId).size() > POST_PAGING_SIZE;
         model.addAttribute("showmore", showMore);
         return POSTS_LIKES_VIEW;
     }
@@ -184,7 +192,7 @@ public class PostsController {
     @RequestMapping(value = "/titles/tag/{tagValue}", method = GET)
     public String tagTitles(@PathVariable("tagValue") String tagValue, Model model)
             throws TagNotFoundException, UnsupportedEncodingException {
-        Tag tag = postService.getTag(URLDecoder.decode(tagValue, "UTF-8"));
+        Tag tag = tagService.getTag(URLDecoder.decode(tagValue, "UTF-8"));
         boolean showMore = postService.getPublishedPostsByTagId(tag.getTagId()).size() > TITLE_PAGING_SIZE;
         model.addAttribute("tag", tag);
         model.addAttribute("showmore", showMore);

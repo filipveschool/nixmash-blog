@@ -6,9 +6,6 @@ import com.nixmash.blog.jpa.model.UserConnection;
 import java.util.Collection;
 import java.util.Random;
 
-/**
- * Created with IntelliJ IDEA. User: daveburke Date: 4/15/15 Time: 12:06 PM
- */
 public class ContactUtils {
 
 	// region Properties

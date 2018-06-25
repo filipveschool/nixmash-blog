@@ -75,12 +75,17 @@ public class SiteServiceTests extends SpringDataTests {
     @Test
     public void updateSiteOptionWithSiteOptionDTO() throws SiteOptionNotFoundException {
 
-        SiteOptionDTO siteOptionDTO;
-        siteOptionDTO = SiteOptionDTO.with(ISiteOption.SITE_NAME, "My Fabulous Site").build();
+        SiteOptionDTO siteOptionDTO = new SiteOptionDTO();
+        siteOptionDTO.setName(ISiteOption.SITE_NAME);
+        siteOptionDTO.setValue("My Fabulous Site");
+
         siteService.update(siteOptionDTO);
         assert (siteOptions.getSiteName().equals("My Fabulous Site"));
 
-        siteOptionDTO = SiteOptionDTO.with(ISiteOption.SITE_NAME, null).build();
+        siteOptionDTO = new SiteOptionDTO();
+        siteOptionDTO.setName(ISiteOption.SITE_NAME);
+        siteOptionDTO.setValue(null);
+
         siteService.update(siteOptionDTO);
     }
 

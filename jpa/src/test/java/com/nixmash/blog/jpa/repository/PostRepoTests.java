@@ -24,7 +24,10 @@ import java.util.Set;
 import static com.nixmash.blog.jpa.utils.PostTestUtils.getTestCategory;
 import static com.nixmash.blog.jpa.utils.PostTestUtils.getTestTags;
 import static org.hamcrest.Matchers.isA;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 /**
  * Created by daveburke on 5/31/16.
@@ -61,11 +64,16 @@ public class PostRepoTests {
 
     @Test
     public void newLinkHasPostSourceDomain() {
-        Post post = Post
-                .getBuilder(1L, "New Link", "new-link", "http://linksource.com", "New link content!", PostType.LINK, PostDisplayType.LINK_SUMMARY)
-                .tags(getTestTags(2))
-                .category(getTestCategory())
-                .build();
+        Post post = new Post();
+        post.setUserId(1L);
+        post.setPostType(PostType.LINK);
+        post.setDisplayType(PostDisplayType.LINK_SUMMARY);
+        post.setPostContent("New post content!");
+        post.setPostLink("http://linksource.com");
+        post.setPostTitle("New Link");
+        post.setPostName("new-link");
+        post.setTags(getTestTags(2));
+        post.setCategory(getTestCategory());
 
         Post saved = postRepository.save(post);
         assertNotNull(saved);
@@ -77,11 +85,16 @@ public class PostRepoTests {
 
     @Test
     public void newCategoryAdded() {
-        Post post = Post
-                .getBuilder(1L, "New Title", "new-title", null, "New post content!", PostType.POST, PostDisplayType.POST)
-                .tags(getTestTags(2))
-                .category(getTestCategory())
-                .build();
+        Post post = new Post();
+        post.setUserId(1L);
+        post.setPostType(PostType.POST);
+        post.setDisplayType(PostDisplayType.POST);
+        post.setPostContent("New post content!");
+        post.setPostLink(null);
+        post.setPostTitle("New Title");
+        post.setPostName("new-title");
+        post.setTags(getTestTags(2));
+        post.setCategory(getTestCategory());
 
         Post saved = postRepository.save(post);
         assertNotNull(saved);
@@ -93,7 +106,15 @@ public class PostRepoTests {
 
     @Test
     public void nullPostLinkEnteredAndResultsInPostSourceAsNull() {
-        Post post = Post.getBuilder(1L, "Nuther New Title", "nuther-new-title", null, "New post content!", PostType.POST, PostDisplayType.POST).build();
+        Post post = new Post();
+        post.setUserId(1L);
+        post.setPostTitle("Nuther New Title");
+        post.setPostName("nuther-new-title");
+        post.setPostLink(null);
+        post.setPostContent("New post content!");
+        post.setPostType(PostType.POST);
+        post.setDisplayType(PostDisplayType.POST);
+
         Post saved = postRepository.save(post);
         assertNotNull(saved);
         assertNull(saved.getPostLink());
@@ -102,19 +123,21 @@ public class PostRepoTests {
 
     @Test
     public void savePostWithTags() {
-        Post post = Post.getBuilder(1L,
-                "Post With Tags",
-                "post-with-tags",
-                null,
-                "New post with tags!",
-                PostType.POST,
-                PostDisplayType.POST)
-                .build();
+        Post post = new Post();
+        post.setUserId(1L);
+        post.setPostTitle("Post With Tags");
+        post.setPostName("post-with-tags");
+        post.setPostLink(null);
+        post.setPostContent("New post with tags!");
+        post.setPostType(PostType.POST);
+        post.setDisplayType(PostDisplayType.POST);
 
-        Tag tag1 = new Tag("third tag");
+        Tag tag1 = new Tag();
+        tag1.setTagValue("third tag");
         tag1 = tagRepository.save(tag1);
 
-        Tag tag2 = new Tag("fourth tag");
+        Tag tag2 = new Tag();
+        tag2.setTagValue("fourth tag");
         tag2 = tagRepository.save(tag2);
 
         Post saved = postRepository.save(post);
@@ -126,7 +149,7 @@ public class PostRepoTests {
 
         postRepository.save(saved);
 
-        List<Post> posts= postRepository.findAllWithDetail();
+        List<Post> posts = postRepository.findAllWithDetail();
         Optional<Post> found = posts.stream()
                 .filter(p -> p.getPostId().equals(saved.getPostId())).findFirst();
 
@@ -138,7 +161,7 @@ public class PostRepoTests {
     @Test
     public void addTags() {
 
-        Integer startTagCount = tagRepository.findAll().size();
+        int startTagCount = tagRepository.findAll().size();
 
         Tag tag = new Tag("tag one");
         tagRepository.save(tag);

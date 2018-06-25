@@ -13,7 +13,11 @@ import com.nixmash.blog.jpa.model.Category;
 import com.nixmash.blog.jpa.model.CurrentUser;
 import com.nixmash.blog.jpa.model.Post;
 import com.nixmash.blog.jpa.model.Tag;
+import com.nixmash.blog.jpa.service.interfaces.CategoryService;
+import com.nixmash.blog.jpa.service.interfaces.LikeService;
+import com.nixmash.blog.jpa.service.interfaces.PermaPostService;
 import com.nixmash.blog.jpa.service.interfaces.PostService;
+import com.nixmash.blog.jpa.service.interfaces.TagService;
 import com.nixmash.blog.jpa.utils.PostUtils;
 import com.nixmash.blog.jsoup.dto.PagePreviewDTO;
 import com.nixmash.blog.jsoup.service.JsoupService;
@@ -53,6 +57,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @Controller
 @RequestMapping(value = "/admin/posts")
 public class AdminPostsController {
+
+     @Autowired
+     private TagService tagService;
 
     // region static view properties
 
@@ -101,6 +108,16 @@ public class AdminPostsController {
     public static final String POST_DRAFT = "draft";
 
     // endregion
+
+
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private LikeService likeService;
+
+    @Autowired
+    private PermaPostService permaPostService;
 
     // region beans
 
@@ -231,7 +248,7 @@ public class AdminPostsController {
         PostType postType = PostType.valueOf(type.toUpperCase());
         model.addAttribute("postDTO", new PostDTO());
         model.addAttribute("canPreview", false);
-        model.addAttribute("categories", postService.getAdminSelectionCategories());
+        model.addAttribute("categories", categoryService.getAdminSelectionCategories());
         if (postType == PostType.POST) {
             WebUtils.setSessionAttribute(request, SESSION_ATTRIBUTE_NEWPOST, null);
             model.addAttribute("hasPost", true);
@@ -256,7 +273,7 @@ public class AdminPostsController {
                 result.rejectValue("link", "post.link.page.not.found");
                 return ADMIN_LINK_ADD_VIEW;
             } else {
-                model.addAttribute("categories", postService.getAdminSelectionCategories());
+                model.addAttribute("categories", categoryService.getAdminSelectionCategories());
                 model.addAttribute("hasLink", true);
                 model.addAttribute("hasCarousel", true);
                 WebUtils.setSessionAttribute(request, "pagePreview", pagePreview);
@@ -399,7 +416,7 @@ public class AdminPostsController {
                     model.addAttribute("hasImageUploads", true);
                     model.addAttribute("canPreview", true);
                     model.addAttribute("postName", saved.getPostName());
-                    model.addAttribute("categories", postService.getAdminSelectionCategories());
+                    model.addAttribute("categories", categoryService.getAdminSelectionCategories());
                     return ADMIN_POST_ADD_VIEW;
                 }
             }
@@ -417,7 +434,7 @@ public class AdminPostsController {
     @RequestMapping(value = "/update/{postId}", method = GET)
     public String updatePost(@PathVariable("postId") Long postId,
                              Model model, HttpServletRequest request) throws PostNotFoundException {
-        Post post = postService.getPostById(postId);
+        Post post = permaPostService.getPostById(postId);
         String postType = StringUtils.capitalize(post.getPostType().name().toLowerCase());
         String pageTitle = webUI.getMessage(MESSAGE_ADMIN_UPDATE_POSTLINK_TITLE, postType);
         String pageHeading = webUI.getMessage(MESSAGE_ADMIN_UPDATE_POSTLINK_HEADING, postType);
@@ -434,7 +451,7 @@ public class AdminPostsController {
         model.addAttribute("postDTO", postDTO);
         model.addAttribute("pageTitle", pageTitle);
         model.addAttribute("pageHeading", pageHeading);
-        model.addAttribute("categories", postService.getAdminSelectionCategories());
+        model.addAttribute("categories", categoryService.getAdminSelectionCategories());
 
         model.addAllAttributes(getPostLinkAttributes(request, post.getPostType()));
 
@@ -512,7 +529,7 @@ public class AdminPostsController {
     public ModelAndView tagList(Model model) {
 
         ModelAndView mav = new ModelAndView();
-        mav.addObject("tags", postService.getTagCloud(-1));
+        mav.addObject("tags", tagService.getTagCloud(-1));
         mav.addObject("newTag", new Tag());
         mav.setViewName(ADMIN_TAGS_VIEW);
         return mav;
@@ -527,7 +544,7 @@ public class AdminPostsController {
             return ADMIN_TAGS_VIEW;
         } else {
 
-            Tag tag = postService.createTag(tagDTO);
+            Tag tag = tagService.createTag(tagDTO);
             logger.info("Tag Added: {}", tag.getTagValue());
             status.setComplete();
 
@@ -544,7 +561,7 @@ public class AdminPostsController {
             webUI.addFeedbackMessage(attributes, FEEDBACK_MESSAGE_TAG_ERROR);
             return "redirect:/admin/posts/tags";
         } else {
-            postService.updateTag(tagDTO);
+            tagService.updateTag(tagDTO);
             webUI.addFeedbackMessage(attributes, FEEDBACK_MESSAGE_TAG_UPDATED, tagDTO.getTagValue());
             return "redirect:/admin/posts/tags";
         }
@@ -558,7 +575,7 @@ public class AdminPostsController {
             return "redirect:/admin/posts/tags";
         } else {
             List<Post> posts = postService.getAllPostsByTagId(tagDTO.getTagId());
-            postService.deleteTag(tagDTO, posts);
+            tagService.deleteTag(tagDTO, posts);
             webUI.addFeedbackMessage(attributes, FEEDBACK_MESSAGE_TAG_DELETED, tagDTO.getTagValue());
         }
 
@@ -574,7 +591,7 @@ public class AdminPostsController {
     public ModelAndView categoryList(Model model) {
 
         ModelAndView mav = new ModelAndView();
-        List<CategoryDTO> categories = postService.getAdminCategories();
+        List<CategoryDTO> categories = categoryService.getAdminCategories();
         mav.addObject("categories", categories);
         mav.addObject("newCategory", new Category());
         mav.setViewName(ADMIN_CATEGORIES_VIEW);
@@ -590,7 +607,7 @@ public class AdminPostsController {
             return ADMIN_CATEGORIES_VIEW;
         } else {
 
-            Category category = postService.createCategory(categoryDTO);
+            Category category = categoryService.createCategory(categoryDTO);
             logger.info("Category Added: {}", category.getCategoryValue());
             status.setComplete();
 
@@ -612,7 +629,7 @@ public class AdminPostsController {
             webUI.addFeedbackMessage(attributes, FEEDBACK_MESSAGE_CATEGORY_ERROR);
             return "redirect:/admin/posts/categories";
         } else {
-            postService.updateCategory(categoryDTO);
+            categoryService.updateCategory(categoryDTO);
             webUI.addFeedbackMessage(attributes, FEEDBACK_MESSAGE_CATEGORY_UPDATED, categoryDTO.getCategoryValue());
             return "redirect:/admin/posts/categories";
         }
@@ -631,7 +648,7 @@ public class AdminPostsController {
             return "redirect:/admin/posts/categories";
         } else {
             List<Post> posts = postService.getAllPostsByCategoryId(categoryDTO.getCategoryId());
-            postService.deleteCategory(categoryDTO, posts);
+            categoryService.deleteCategory(categoryDTO, posts);
             webUI.addFeedbackMessage(attributes, FEEDBACK_MESSAGE_CATEGORY_DELETED, categoryDTO.getCategoryValue());
         }
         return "redirect:/admin/posts/categories";
@@ -694,7 +711,7 @@ public class AdminPostsController {
         String postSource = PostUtils.createPostSource(sourceLink);
         PostDTO tmpDTO = new PostDTO();
         String imageUrl = null;
-        Boolean hasImages = true;
+        boolean hasImages = true;
 
         if (imageIndex == null) {
 
@@ -765,13 +782,13 @@ public class AdminPostsController {
     }
 
     private Boolean isDuplicatePost(PostDTO postDTO, Post sessionPost) {
-        Boolean isDuplicate = false;
+        boolean isDuplicate = false;
 
         if (StringUtils.isNotEmpty(postDTO.getPostTitle())) {
             String slug = PostUtils.createSlug(postDTO.getPostTitle());
             Post found = null;
             try {
-                found = postService.getPost(slug);
+                found = permaPostService.getPost(slug);
             } catch (PostNotFoundException e) {
                 // can be null for this check of a pre-existing post
             }

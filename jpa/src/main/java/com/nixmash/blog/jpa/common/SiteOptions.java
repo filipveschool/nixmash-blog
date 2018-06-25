@@ -37,12 +37,8 @@ public class SiteOptions {
 
     // endregion
 
-    private SiteOptionRepository siteOptionRepository;
-
     @Autowired
-    public SiteOptions(SiteOptionRepository siteOptionRepository) {
-        this.siteOptionRepository = siteOptionRepository;
-    }
+    private SiteOptionRepository siteOptionRepository;
 
     @PostConstruct
     public void init() throws

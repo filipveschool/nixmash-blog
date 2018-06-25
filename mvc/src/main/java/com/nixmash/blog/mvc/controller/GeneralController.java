@@ -68,11 +68,11 @@ public class GeneralController {
     public String home(Model model) {
         String springVersion = webUI.parameterizedMessage("home.spring.version", SpringBootVersion.getVersion());
         model.addAttribute("springVersion", springVersion);
-
-        if (webUI.isNixMash()) {
-            SiteImage siteImage = siteService.getHomeBanner();
-            model.addAttribute("siteImage", siteImage);
-        }
+//
+//        if (webUI.isNixMash()) {
+//            SiteImage siteImage = siteService.getHomeBanner();
+//            model.addAttribute("siteImage", siteImage);
+//        }
 
         Slice<Post> posts = postService.getPublishedPosts(0, 10);
         if (posts.getContent().size() > 0)

@@ -30,14 +30,14 @@ public class PostDTO implements Serializable {
 
     public static final String ALPHACODE_09 = "09";
 
-    @NotEmpty
+    @NotNull
     private Set<TagDTO> tags = new HashSet<TagDTO>();
 
-    @NotEmpty
+    @NotNull
     @Length(max = Post.MAX_POST_TITLE_LENGTH)
     private String postTitle;
 
-    @NotEmpty
+    @NotNull
     @Length(min = Post.MIN_POST_CONTENT_LENGTH)
     private String postContent;
 

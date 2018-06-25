@@ -30,9 +30,6 @@ public interface PostService {
     @Transactional
     Post update(PostDTO postDTO) throws PostNotFoundException;
 
-
-
-
     @Transactional(readOnly = true)
     Page<Post> getPublishedPosts(Integer pageNumber, Integer pageSize);
 

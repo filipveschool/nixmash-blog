@@ -23,9 +23,4 @@ public class SpringDataTests {
 	@Autowired
 	ApplicationSettings applicationSettings;
 
-	@Test
-	public void contextLoads() {
-		assertNotNull(applicationSettings.getIsNixmashSite());
-	}
-
 }

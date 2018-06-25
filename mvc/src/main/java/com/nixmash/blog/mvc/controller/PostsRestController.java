@@ -7,7 +7,10 @@ import com.nixmash.blog.jpa.enums.PostDisplayType;
 import com.nixmash.blog.jpa.enums.PostType;
 import com.nixmash.blog.jpa.model.CurrentUser;
 import com.nixmash.blog.jpa.model.Post;
+import com.nixmash.blog.jpa.service.interfaces.LikeService;
+import com.nixmash.blog.jpa.service.interfaces.PostImageService;
 import com.nixmash.blog.jpa.service.interfaces.PostService;
+import com.nixmash.blog.jpa.service.interfaces.TagService;
 import com.nixmash.blog.jpa.utils.Pair;
 import com.nixmash.blog.jpa.utils.PostUtils;
 import com.nixmash.blog.mail.service.interfaces.FmService;
@@ -60,6 +63,15 @@ public class PostsRestController {
     
     @Autowired
     private PostDocService postDocService;
+
+    @Autowired
+    private PostImageService postImageService;
+
+    @Autowired
+    private TagService tagService;
+
+    @Autowired
+    private LikeService likeService;
 
     private int minTagCount = 0;
     private int maxTagCount = 0;
@@ -262,7 +274,7 @@ public class PostsRestController {
 
     @RequestMapping(value = "/post/like/{postId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public int likePost(@PathVariable("postId") int postId, CurrentUser currentUser) {
-        return postService.addPostLike(currentUser.getId(), postId);
+        return likeService.addPostLike(currentUser.getId(), postId);
     }
 
     @RequestMapping(value = "/likes/{userId}/page/{pageNumber}",
@@ -271,12 +283,12 @@ public class PostsRestController {
                                   @PathVariable int pageNumber,
                                   HttpServletRequest request,
                                   CurrentUser currentUser) {
-        List<Post> posts = postService.getPostsByUserLikes(userId);
+        List<Post> posts = likeService.getPostsByUserLikes(userId);
         String result;
         if (posts == null) {
             result = fmService.getNoLikesMessage();
         } else {
-            posts = postService.getPagedLikedPosts(userId, pageNumber, POST_PAGING_SIZE);
+            posts = likeService.getPagedLikedPosts(userId, pageNumber, POST_PAGING_SIZE);
             result = populatePostStream(posts, currentUser);
             WebUtils.setSessionAttribute(request, SESSION_ATTRIBUTE_LIKEDPOSTS, posts);
         }
@@ -330,10 +342,10 @@ public class PostsRestController {
         for (Post post : posts) {
             try {
                 if (post.getDisplayType().equals(PostDisplayType.MULTIPHOTO_POST)) {
-                    post.setPostImages(postService.getPostImages(post.getPostId()));
+                    post.setPostImages(postImageService.getPostImages(post.getPostId()));
                 }
                 if (post.getDisplayType().equals(PostDisplayType.SINGLEPHOTO_POST)) {
-                    post.setSingleImage(postService.getPostImages(post.getPostId()).get(0));
+                    post.setSingleImage(postImageService.getPostImages(post.getPostId()).get(0));
                 }
             } catch (Exception e) {
                 log.info(String.format("Image Retrieval Error for Post ID:%s Title: %s", String.valueOf(post.getPostId()), post.getPostTitle()));
@@ -350,13 +362,13 @@ public class PostsRestController {
 
     @RequestMapping(value = "/tags", produces = MediaType.APPLICATION_JSON_VALUE)
     public Set<TagDTO> getAllTagDTOs() {
-        return postService.getTagDTOs();
+        return tagService.getTagDTOs();
     }
 
     @RequestMapping(value = "/tagvalues",
             produces = MediaType.APPLICATION_JSON_VALUE)
     public List<String> getTagValues() {
-        return postService.getTagValues();
+        return tagService.getTagValues();
     }
 
 
@@ -364,7 +376,7 @@ public class PostsRestController {
     public String getTagCloud(@RequestParam(value = "alltags", required = false, defaultValue = "false") Boolean alltags) {
 
         int tagCount = alltags ? -1 : applicationSettings.getSidebarTagCloudCount();
-        List<TagDTO> tags = postService.getTagCloud(tagCount);
+        List<TagDTO> tags = tagService.getTagCloud(tagCount);
         maxTagCount = tags.stream().mapToInt(TagDTO::getTagCount).max().orElse(0);
         minTagCount = tags.stream().mapToInt(TagDTO::getTagCount).min().orElse(0);
 

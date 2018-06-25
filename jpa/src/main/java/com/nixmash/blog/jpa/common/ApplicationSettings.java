@@ -11,15 +11,13 @@ import java.io.Serializable;
 @Getter
 @Setter
 @Component
-@PropertySource("file:${blog.properties.file.path}${blog.properties.file.basename}.properties")
+// @PropertySource("file:${blog.properties.file.path}${blog.properties.file.basename}.properties")
+@PropertySource("classpath:/blog.properties")
 @ConfigurationProperties(prefix = "blog")
 public class ApplicationSettings implements Serializable {
 
     private static final long serialVersionUID = 7939595017750704755L;
 
-    // region Site
-
-    private Boolean isNixmashSite;
     private String baseUrl;
     private String siteName;
     private Boolean loginEnabled;

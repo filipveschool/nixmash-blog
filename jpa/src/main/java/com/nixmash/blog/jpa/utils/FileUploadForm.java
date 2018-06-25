@@ -1,11 +1,11 @@
 package com.nixmash.blog.jpa.utils;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
 @Getter
 @Setter
 public class FileUploadForm {

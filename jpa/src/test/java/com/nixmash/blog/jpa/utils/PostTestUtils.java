@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Created by daveburke on 6/1/16.
@@ -53,28 +55,15 @@ public class PostTestUtils {
     }
 
     public static List<Post> createPostList(int n) {
-        List<Post> posts = new ArrayList<Post>(n);
-        for (int i = 1; i < n + 1; i++) {
-            PostDTO postDTO = createPostDTO(n);
-            posts.add(PostUtils.postDtoToPost(postDTO));
-        }
-        return posts;
+        return IntStream.range(1, n + 1).mapToObj(i -> createPostDTO(n)).map(PostUtils::postDtoToPost).collect(Collectors.toCollection(() -> new ArrayList<>(n)));
     }
 
     public static Set<TagDTO> getTestTagDTOs(int i) {
-        Set<TagDTO> tagDTOs = new LinkedHashSet<>();
-        for (int j = 1000; j < i; j++) {
-            tagDTOs.add(new TagDTO(i, "tag-" + i));
-        }
-        return tagDTOs;
+        return IntStream.range(1000, i).mapToObj(j -> new TagDTO(i, "tag-" + i)).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     public static Set<Tag> getTestTags(int i) {
-        Set<Tag> tags = new LinkedHashSet<>();
-        for (int j = 1; j < i; j++) {
-            tags.add(new Tag((long) i, "tag-" + i));
-        }
-        return tags;
+        return IntStream.range(1, i).mapToObj(j -> new Tag((long) i, "tag-" + i)).collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     public static CategoryDTO getTestCategoryDTO() {

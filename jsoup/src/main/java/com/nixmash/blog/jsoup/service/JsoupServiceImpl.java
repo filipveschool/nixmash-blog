@@ -8,6 +8,7 @@ import com.nixmash.blog.jpa.model.Post;
 import com.nixmash.blog.jpa.model.PostImage;
 import com.nixmash.blog.jpa.model.PostMeta;
 import com.nixmash.blog.jpa.repository.PostMetaRepository;
+import com.nixmash.blog.jpa.service.interfaces.PostImageService;
 import com.nixmash.blog.jpa.service.interfaces.PostService;
 import com.nixmash.blog.jpa.utils.PostUtils;
 import com.nixmash.blog.jsoup.base.JsoupHtmlParser;
@@ -41,6 +42,9 @@ public class JsoupServiceImpl implements JsoupService {
     private final ApplicationSettings applicationSettings;
     private final PostMetaRepository postMetaRepository;
     private final PostService postService;
+
+    @Autowired
+    private PostImageService postImageService;
 
     public JsoupServiceImpl(ApplicationSettings applicationSettings, PostMetaRepository postMetaRepository, PostService postService) {
         this.applicationSettings = applicationSettings;
@@ -173,7 +177,7 @@ public class JsoupServiceImpl implements JsoupService {
         PostDisplayType postDisplayType = postDTO.getDisplayType();
         if (postDisplayType == PostDisplayType.MULTIPHOTO_POST ||
                 postDisplayType == PostDisplayType.SINGLEPHOTO_POST) {
-            List<PostImage> postImages = postService.getPostImages(postDTO.getPostId());
+            List<PostImage> postImages = postImageService.getPostImages(postDTO.getPostId());
             if (!postImages.isEmpty()) {
                 PostImage postImage = postImages.get(0);
                 twitterImage = postImage.getUrl() + postImage.getNewFilename();

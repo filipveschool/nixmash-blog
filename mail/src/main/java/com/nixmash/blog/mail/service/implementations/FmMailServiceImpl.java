@@ -2,8 +2,6 @@ package com.nixmash.blog.mail.service.implementations;
 
 import com.nixmash.blog.jpa.common.ApplicationSettings;
 import com.nixmash.blog.jpa.model.User;
-import com.nixmash.blog.mail.common.MailSettings;
-import com.nixmash.blog.mail.components.MailSender;
 import com.nixmash.blog.mail.components.MailUI;
 import com.nixmash.blog.mail.dto.MailDTO;
 import com.nixmash.blog.mail.service.interfaces.FmMailService;
@@ -12,8 +10,10 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.MailSendException;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
@@ -36,10 +36,7 @@ public class FmMailServiceImpl implements FmMailService {
     private static final String EMAIL_SITE_USER_SERVICES = "mail.site.user.services";
 
     @Autowired
-    private MailSender mailSender;
-
-    @Autowired
-    private MailSettings mailSettings;
+    private JavaMailSender mailSender;
 
     @Autowired
     private ApplicationSettings applicationSettings;
@@ -55,7 +52,21 @@ public class FmMailServiceImpl implements FmMailService {
 
 //    @Value("${mail.contact.body.type}")
 //    private MailDTO.Type mailType;
-    
+
+    @Value("${mail.developer.to}")
+    private String sendTo;
+
+    @Value("${mail.contact.to}")
+    private String contactTo;
+
+
+    @Value("${mail.send.contact.cc}")
+    private Boolean sendContactCC;
+
+
+    @Value("${mail.contact.cc}")
+    private String contactCC;
+
     @Override
     public void sendResetPasswordMail(User user, String token) {
         try {
@@ -73,7 +84,7 @@ public class FmMailServiceImpl implements FmMailService {
                     message.setFrom(mailUI.getMessage(PASSWORD_RESET_EMAIL_FROM));
                     String sendTo = user.getEmail();
                     if (applicationSettings.getBaseUrl().indexOf("localhost") > 0) {
-                        sendTo = mailSettings.getDeveloperTo();
+                        sendTo = sendTo;
                     }
                     message.addTo(sendTo);
 
@@ -91,7 +102,7 @@ public class FmMailServiceImpl implements FmMailService {
 
                     Map<String, Object> model = new Hashtable<>();
                     model.put("greeting", greeting);
-                    model.put("memberServices",  mailUI.getMessage(EMAIL_SITE_USER_SERVICES));
+                    model.put("memberServices", mailUI.getMessage(EMAIL_SITE_USER_SERVICES));
                     model.put("siteName", siteName);
                     model.put("applicationPropertyUrl", applicationPropertyUrl);
                     model.put("resetLink", resetLink);
@@ -124,10 +135,10 @@ public class FmMailServiceImpl implements FmMailService {
 
                 MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
                 message.setFrom(mailDTO.getFrom());
-                message.addTo(mailSettings.getContactTo());
+                message.addTo(contactTo);
 
-                if (mailSettings.getSendContactCC()) {
-                    message.addCc(mailSettings.getContactCC());
+                if (sendContactCC) {
+                    message.addCc(contactCC);
                 }
 
                 String subject = mailUI.getMessage(CONTACT_EMAIL_SUBJECT);
@@ -190,7 +201,7 @@ public class FmMailServiceImpl implements FmMailService {
                     message.setFrom(mailUI.getMessage(USER_VERIFICATION_EMAIL_FROM));
                     String sendTo = user.getEmail();
                     if (applicationSettings.getBaseUrl().indexOf("localhost") > 0) {
-                        sendTo = mailSettings.getDeveloperTo();
+                        sendTo = sendTo;
                     }
                     message.addTo(sendTo);
 
@@ -208,7 +219,7 @@ public class FmMailServiceImpl implements FmMailService {
 
                     Map<String, Object> model = new Hashtable<>();
                     model.put("greeting", greeting);
-                    model.put("memberServices",  mailUI.getMessage(EMAIL_SITE_USER_SERVICES));
+                    model.put("memberServices", mailUI.getMessage(EMAIL_SITE_USER_SERVICES));
                     model.put("siteName", siteName);
                     model.put("applicationPropertyUrl", applicationPropertyUrl);
                     model.put("verifyLink", verifyLink);

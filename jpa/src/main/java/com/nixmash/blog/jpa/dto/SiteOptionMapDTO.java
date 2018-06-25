@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Getter
@@ -20,7 +19,7 @@ public class SiteOptionMapDTO implements Serializable {
     @NotEmpty
     private String siteDescription;
 
-    @NotNull
+    @NotEmpty
     private Boolean addGoogleAnalytics;
 
     private String googleAnalyticsTrackingId;

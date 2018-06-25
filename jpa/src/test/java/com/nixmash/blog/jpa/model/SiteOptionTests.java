@@ -36,11 +36,11 @@ public class SiteOptionTests {
     public static final String DEFAULT_SITE_DESCRIPTION = "My Site Description";
     public static final String DEFAULT_TRACKING_ID = "UA-XXXXXX-7";
     public static final Integer DEFAULT_INTEGER_PROPERTY = 1;
-    public static final UserRegistration DEFAULT_USER_REGISTRATION=  UserRegistration.ADMINISTRATIVE_APPROVAL;
+    public static final UserRegistration DEFAULT_USER_REGISTRATION = UserRegistration.ADMINISTRATIVE_APPROVAL;
 
     private static final String MY_UPDATED_SITE_NAME = "My Updated Site Name";
     private static final Integer UPDATED_INTEGER_PROPERTY = 8;
-    public static final UserRegistration UPDATED_USER_REGISTRATION=  UserRegistration.CLOSED;
+    public static final UserRegistration UPDATED_USER_REGISTRATION = UserRegistration.CLOSED;
 
     // endregion
 
@@ -93,14 +93,18 @@ public class SiteOptionTests {
 
     @Test
     public void siteOptionDtoCreatedFromSiteOptionMapDTO() {
-        SiteOptionDTO siteOptionDTO = SiteOptionDTO.with(ISiteOption.SITE_NAME, "My Fabulous Site").build();
+        SiteOptionDTO siteOptionDTO = new SiteOptionDTO();
+        siteOptionDTO.setName(ISiteOption.SITE_NAME);
+        siteOptionDTO.setValue("My Fabulous Site");
         assertEquals(siteOptionDTO.getName(), ISiteOption.SITE_NAME);
         assertEquals(siteOptionDTO.getValue(), "My Fabulous Site");
     }
 
     @Test
     public void userRegistrationEnumRetrievedFromSiteOptionDTO() {
-        SiteOptionDTO siteOptionDTO = SiteOptionDTO.with(ISiteOption.USER_REGISTRATION, UserRegistration.INVITE_ONLY).build();
+        SiteOptionDTO siteOptionDTO = new SiteOptionDTO();
+        siteOptionDTO.setName(ISiteOption.USER_REGISTRATION);
+        siteOptionDTO.setValue(UserRegistration.INVITE_ONLY.toString());
         assertEquals(siteOptionDTO.getName(), ISiteOption.USER_REGISTRATION);
         assertEquals(siteOptionDTO.getValue(), "INVITE_ONLY");
     }
@@ -108,13 +112,12 @@ public class SiteOptionTests {
     @Test
     public void SiteOptionMapDtoValidationTests() {
 
-        SiteOptionMapDTO siteOptionMapDTO = SiteOptionMapDTO.withGeneralSettings(
-                null,
-                siteOptions.getSiteDescription(),
-                siteOptions.getAddGoogleAnalytics(),
-                siteOptions.getGoogleAnalyticsTrackingId(),
-                siteOptions.getUserRegistration())
-                .build();
+        SiteOptionMapDTO siteOptionMapDTO = new SiteOptionMapDTO();
+        siteOptionMapDTO.setSiteName(null);
+        siteOptionMapDTO.setSiteDescription(siteOptions.getSiteDescription());
+        siteOptionMapDTO.setAddGoogleAnalytics(siteOptions.getAddGoogleAnalytics());
+        siteOptionMapDTO.setGoogleAnalyticsTrackingId(siteOptions.getGoogleAnalyticsTrackingId());
+        siteOptionMapDTO.setUserRegistration(siteOptions.getUserRegistration());
 
         Errors errors = new BeanPropertyBindingResult(siteOptionMapDTO, "siteOptionMapDTO");
         ValidationUtils.invokeValidator(new SiteOptionMapDtoValidator(), siteOptionMapDTO, errors);

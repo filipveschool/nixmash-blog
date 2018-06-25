@@ -2,6 +2,8 @@ package com.nixmash.blog.mvc.components;
 
 import com.nixmash.blog.jpa.common.ApplicationSettings;
 import com.nixmash.blog.jpa.model.Post;
+import com.nixmash.blog.jpa.service.interfaces.PermaPostService;
+import com.nixmash.blog.jpa.service.interfaces.PostImageService;
 import com.nixmash.blog.jpa.service.interfaces.PostService;
 import com.nixmash.blog.mail.service.interfaces.FmService;
 import com.rometools.rome.feed.rss.Channel;
@@ -31,6 +33,11 @@ public final class RssPostFeedView extends AbstractRssFeedView {
     private FmService fmService;
     private ApplicationSettings applicationSettings;
 
+    @Autowired
+    private PermaPostService permaPostService;
+
+    @Autowired
+    private PostImageService postImageService;
 
     @Autowired
     public RssPostFeedView(PostService postService,
@@ -73,9 +80,9 @@ public final class RssPostFeedView extends AbstractRssFeedView {
 
         Long postId = post.getPostId();
         if (post.isMultiPhotoPost())
-            post.setPostImages(postService.getPostImages(postId));
+            post.setPostImages(postImageService.getPostImages(postId));
         if (post.isSinglePhotoPost())
-            post.setSingleImage(postService.getPostImages(postId).get(0));
+            post.setSingleImage(postImageService.getPostImages(postId).get(0));
 
         Description description = new Description();
         description.setType(Content.HTML);

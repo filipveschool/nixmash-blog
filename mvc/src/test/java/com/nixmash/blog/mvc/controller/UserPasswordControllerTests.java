@@ -79,7 +79,7 @@ public class UserPasswordControllerTests extends AbstractContext {
 
         mvc.perform(request)
                 .andExpect(model()
-                        .attributeHasFieldErrorCode("forgotEmailDTO", "email", containsString("NotEmpty")));
+                        .attributeHasFieldErrorCode("forgotEmailDTO", "email", containsString("NotNull")));
     }
 
     @Test

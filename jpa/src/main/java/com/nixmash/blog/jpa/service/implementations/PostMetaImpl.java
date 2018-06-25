@@ -7,8 +7,10 @@ import com.nixmash.blog.jpa.model.PostMeta;
 import com.nixmash.blog.jpa.repository.PostMetaRepository;
 import com.nixmash.blog.jpa.service.interfaces.PostMetaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Service
 public class PostMetaImpl implements PostMetaService {
 
     @Autowired
@@ -33,15 +35,17 @@ public class PostMetaImpl implements PostMetaService {
             String twitterSite = applicationSettings.getTwitterSite();
             String twitterUrl = String.format("%s/post/%s", applicationSettings.getBaseUrl(), post.getPostName());
             String twitterImage = String.format("%s%s", applicationSettings.getBaseUrl(), postMeta.getTwitterImage());
-            return PostMeta.getBuilder(
-                    postMeta.getTwitterCardType(),
-                    post.getPostTitle(),
-                    twitterSite,
-                    postMeta.getTwitterCreator())
-                    .twitterDescription(postMeta.getTwitterDescription())
-                    .twitterImage(twitterImage)
-                    .twitterUrl(twitterUrl)
-                    .build();
+
+            PostMeta pp = new PostMeta();
+            pp.setTwitterCardType(postMeta.getTwitterCardType());
+            pp.setTwitterTitle(post.getPostTitle());
+            pp.setTwitterSite(twitterSite);
+            pp.setTwitterCreator(postMeta.getTwitterCreator());
+            pp.setTwitterDescription(postMeta.getTwitterDescription());
+            pp.setTwitterImage(twitterImage);
+            pp.setTwitterUrl(twitterUrl);
+            return pp;
+
         } else
             return null;
     }

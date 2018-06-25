@@ -16,6 +16,7 @@ import com.nixmash.blog.jpa.exceptions.SiteOptionNotFoundException;
 import com.nixmash.blog.jpa.model.BatchJob;
 import com.nixmash.blog.jpa.model.Post;
 import com.nixmash.blog.jpa.model.SiteImage;
+import com.nixmash.blog.jpa.service.interfaces.CategoryService;
 import com.nixmash.blog.jpa.service.interfaces.PostService;
 import com.nixmash.blog.jpa.service.interfaces.SiteService;
 import com.nixmash.blog.jpa.service.interfaces.StatService;
@@ -40,6 +41,9 @@ public class JpaUI {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @Autowired
     private UserService userService;
@@ -81,7 +85,7 @@ public class JpaUI {
     // region Categories
 
     private void displayCategoryCounts() {
-        List<CategoryDTO> categoryDTOS = postService.getCategoryCounts();
+        List<CategoryDTO> categoryDTOS = categoryService.getCategoryCounts();
         for (CategoryDTO categoryDTO: categoryDTOS) {
             System.out.println(MessageFormat.format("{0} | {1} | {2}",
                     categoryDTO.getCategoryId(), categoryDTO.getCategoryValue(), categoryDTO.getCategoryCount()));
@@ -158,17 +162,16 @@ public class JpaUI {
 
     private void addPostDemo() throws DuplicatePostNameException {
         String title = "Best way to create SEO friendly URI string";
-        PostDTO postDTO = PostDTO.getBuilder(
-                1L,
-                title,
-                PostUtils.createSlug(title),
-                "http://nixmash.com/java/variations-on-json-key-value-pairs-in-spring-mvc/",
-                "This is the post content",
-                PostType.LINK,
-                PostDisplayType.LINK_FEATURE,
-                1L,
-                TwitterCardType.SUMMARY
-        ).build();
+        PostDTO postDTO = new PostDTO();
+        postDTO.setUserId(1L);
+        postDTO.setPostTitle(title);
+        postDTO.setPostName(PostUtils.createSlug(title));
+        postDTO.setPostLink("http://nixmash.com/java/variations-on-json-key-value-pairs-in-spring-mvc/");
+        postDTO.setPostContent("This is the post content");
+        postDTO.setPostType(PostType.LINK);
+        postDTO.setDisplayType(PostDisplayType.LINK_FEATURE);
+        postDTO.setCategoryId(1L);
+        postDTO.setTwitterCardType(TwitterCardType.SUMMARY);
         postService.add(postDTO);
     }
 

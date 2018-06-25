@@ -2,6 +2,7 @@ package com.nixmash.blog.mvc.controller;
 
 import com.nixmash.blog.jpa.common.ApplicationSettings;
 import com.nixmash.blog.jpa.model.PostImage;
+import com.nixmash.blog.jpa.service.interfaces.PostImageService;
 import com.nixmash.blog.jpa.service.interfaces.PostService;
 import com.nixmash.blog.jpa.utils.SharedUtils;
 import com.nixmash.blog.mail.service.interfaces.FmService;
@@ -49,6 +50,9 @@ public class PostsUploadController {
     private final ApplicationSettings applicationSettings;
 
     @Autowired
+    private PostImageService postImageService;
+
+    @Autowired
     public PostsUploadController(PostService postService,
                                  FmService fmService,
                                  ApplicationSettings applicationSettings) {
@@ -68,7 +72,7 @@ public class PostsUploadController {
     @RequestMapping(value = "/photos/upload/{parentId}", method = GET)
     public @ResponseBody Map list(@PathVariable Long parentId) {
         logger.debug("uploadGet called");
-        List<PostImage> list = postService.getPostImages(parentId);
+        List<PostImage> list = postImageService.getPostImages(parentId);
         String urlBase = "/posts/photos";
         for (PostImage image : list) {
             image.setUrl(urlBase + "/picture/" + image.getId());
@@ -135,7 +139,7 @@ public class PostsUploadController {
                 image.setContentType(contentType);
                 image.setSize(mpf.getSize());
                 image.setThumbnailSize(thumbnailFile.length());
-                image = postService.addImage(image);
+                image = postImageService.addImage(image);
 
                 image.setUrl("/posts/photos/picture/" + image.getId());
                 image.setThumbnailUrl("/posts/photos/thumbnail/" + image.getId());
@@ -157,7 +161,7 @@ public class PostsUploadController {
 
     @RequestMapping(value = "/photos/picture/{id}", method = GET)
     public void picture(HttpServletResponse response, @PathVariable Long id) {
-        PostImage image = postService.getPostImage(id);
+        PostImage image = postImageService.getPostImage(id);
         String fileStoragePath = getFileStoragePath(image.getPostId());
         File imageFile = new File(fileStoragePath + image.getNewFilename());
         response.setContentType(image.getContentType());
@@ -172,7 +176,7 @@ public class PostsUploadController {
 
     @RequestMapping(value = "/photos/thumbnail/{id}", method = GET)
     public void thumbnail(HttpServletResponse response, @PathVariable Long id) {
-        PostImage image = postService.getPostImage(id);
+        PostImage image = postImageService.getPostImage(id);
         String fileStoragePath = getFileStoragePath(image.getPostId());
         File imageFile = new File(fileStoragePath + image.getThumbnailFilename());
         response.setContentType(image.getContentType());
@@ -187,13 +191,13 @@ public class PostsUploadController {
 
     @RequestMapping(value = "/photos/delete/{id}", method = DELETE)
     public @ResponseBody List delete(@PathVariable Long id) {
-        PostImage image = postService.getPostImage(id);
+        PostImage image = postImageService.getPostImage(id);
         String fileStoragePath = getFileStoragePath(image.getPostId());
         File imageFile = new File(fileStoragePath + image.getNewFilename());
         imageFile.delete();
         File thumbnailFile = new File(fileStoragePath + image.getThumbnailFilename());
         thumbnailFile.delete();
-        postService.deleteImage(image);
+        postImageService.deleteImage(image);
         List<Map<String, Object>> results = new ArrayList<>();
         Map<String, Object> success = new HashMap<>();
         success.put("success", true);

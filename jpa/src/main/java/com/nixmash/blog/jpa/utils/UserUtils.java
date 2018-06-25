@@ -21,7 +21,7 @@ public class UserUtils {
         userDTO.setEmail(user.getEmail());
         userDTO.setSignInProvider(user.getSignInProvider());
         userDTO.setAuthorities(user.getAuthorities());
-        userDTO.setHasAvatar(user.hasAvatar());
+        userDTO.setHasAvatar(user.isHasAvatar());
         userDTO.setUserKey(user.getUserKey());
         return userDTO;
     }

@@ -2,7 +2,6 @@ package com.nixmash.blog.jpa.repository;
 
 import com.nixmash.blog.jpa.enums.PostType;
 import com.nixmash.blog.jpa.model.Post;
-import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -15,12 +14,12 @@ import java.util.List;
 @Repository
 public interface PostRepository extends PagingAndSortingRepository<Post, Long> {
 
-    Post findByPostId(Long postId) throws DataAccessException;
+    Post findByPostId(Long postId);
 
     @Query("select distinct p from Post p left join fetch p.tags t")
     List<Post> findAllWithDetail();
 
-    Post findByPostNameIgnoreCase(String postName) throws DataAccessException;
+    Post findByPostNameIgnoreCase(String postName);
 
     @Query("select distinct p from Post p left join p.tags t where p.isPublished = true and t.tagId = ?1")
     Page<Post> findPagedPublishedByTagId(long tagId, Pageable pageable);

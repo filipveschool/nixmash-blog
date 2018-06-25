@@ -1,14 +1,16 @@
 package com.nixmash.blog.jpa.utils;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-/**
- * Created by daveburke on 8/1/16.
- */
+@Slf4j
 public class SharedUtils {
 
     public static Long randomNegativeId() {
@@ -28,13 +30,12 @@ public class SharedUtils {
     }
 
 
-    public static boolean isNixMashPC()  {
+    public static boolean isNixMashPC() {
         boolean isNixMashPC = false;
         try {
-            for(Enumeration<NetworkInterface> e
-                = NetworkInterface.getNetworkInterfaces();
-                e.hasMoreElements(); )
-            {
+            for (Enumeration<NetworkInterface> e
+                 = NetworkInterface.getNetworkInterfaces();
+                 e.hasMoreElements(); ) {
                 NetworkInterface ni = e.nextElement();
                 if (ni.getDisplayName().equals("wlp5s0"))
                     isNixMashPC = formatMac(ni.getHardwareAddress()).equals("10-FE-ED-84-9E-A9");
@@ -48,11 +49,15 @@ public class SharedUtils {
     private static String formatMac(byte[] mac) {
         if (mac == null)
             return "UNKNOWN";
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < mac.length; i++) {
-            sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
-        }
-        return sb.toString();
+        String sb = IntStream.range(0, mac.length)
+                .mapToObj(i -> String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""))
+                .collect(Collectors.joining());
+        /**
+         *   for (int i = 0; i < mac.length; i++) {
+         *             sb.append(String.format("%02X%s", mac[i], (i < mac.length - 1) ? "-" : ""));
+         *         }
+         */
+        return sb;
     }
 
 }

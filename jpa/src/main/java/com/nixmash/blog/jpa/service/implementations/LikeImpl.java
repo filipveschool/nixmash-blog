@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class LikesImpl implements LikeService {
+public class LikeImpl implements LikeService {
 
     @Autowired
     private LikeRepository likeRepository;

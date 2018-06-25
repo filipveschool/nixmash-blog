@@ -5,6 +5,7 @@ import com.nixmash.blog.jpa.dto.PostQueryDTO;
 import com.nixmash.blog.jpa.enums.PostType;
 import com.nixmash.blog.jpa.exceptions.PostNotFoundException;
 import com.nixmash.blog.jpa.model.Post;
+import com.nixmash.blog.jpa.service.interfaces.PermaPostService;
 import com.nixmash.blog.jpa.service.interfaces.PostService;
 import com.nixmash.blog.jpa.utils.PostUtils;
 import com.nixmash.blog.solr.model.PostDoc;
@@ -44,6 +45,9 @@ public class SolrPostTests extends SolrContext {
 	PostService postService;
 
 	@Autowired
+	private PermaPostService permaPostService;
+
+	@Autowired
 	SolrOperations solrOperations;
 
 	@Before
@@ -66,7 +70,7 @@ public class SolrPostTests extends SolrContext {
 	@Test
 	public void addPostWithRepository() throws Exception {
 		// using postId 10 which is "Solr Rama"
-		Post post = postService.getPostById(10L);
+		Post post = permaPostService.getPostById(10L);
 		PostDoc postDoc = SolrUtils.createPostDoc(post);
 		customPostDocRepository.save(postDoc);
 
@@ -96,7 +100,7 @@ public class SolrPostTests extends SolrContext {
 	@Test
 	public void addPostWithAddToIndexService() throws Exception {
 		// using postId 10 which is "Solr Rama"
-		Post post = postService.getPostById(10L);
+		Post post = permaPostService.getPostById(10L);
 		postDocService.addToIndex(post);
 		PostDoc found = customPostDocRepository.findOne("10");
 		assertEquals(found.getPostName(), "solr-rama");
@@ -215,7 +219,7 @@ public class SolrPostTests extends SolrContext {
 	}
 
 	private Post updatedPost(String postTitle) throws PostNotFoundException {
-		Post post = postService.getPostById(10L);
+		Post post = permaPostService.getPostById(10L);
 		PostDTO postDTO = PostUtils.postToPostDTO(post);
 		postDTO.setPostTitle(postTitle);
 		return postService.update(postDTO);

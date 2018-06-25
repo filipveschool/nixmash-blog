@@ -12,7 +12,8 @@ import java.util.List;
 
 @Slf4j
 @Service("accessService")
-@PropertySource("file:/home/daveburke/web/nixmash/access.properties")
+// @PropertySource("file:/home/daveburke/web/nixmash/access.properties")
+@PropertySource("classpath:/access.properties")
 public class AccessServiceImpl implements AccessService {
 
 

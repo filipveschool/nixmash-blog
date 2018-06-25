@@ -4,6 +4,7 @@ import com.nixmash.blog.jpa.common.ApplicationSettings;
 import com.nixmash.blog.jpa.dto.PostQueryDTO;
 import com.nixmash.blog.jpa.exceptions.PostNotFoundException;
 import com.nixmash.blog.jpa.model.Post;
+import com.nixmash.blog.jpa.service.interfaces.PermaPostService;
 import com.nixmash.blog.jpa.service.interfaces.PostService;
 import com.nixmash.blog.solr.model.PostDoc;
 import com.nixmash.blog.solr.repository.custom.CustomPostDocRepository;
@@ -40,6 +41,8 @@ public class PostDocServiceImpl implements PostDocService {
     private final PostService postService;
     private final ApplicationSettings applicationSettings;
 
+@Autowired
+private PermaPostService permaPostService;
 
     @Autowired
     public PostDocServiceImpl(SolrOperations solrOperations, PostService postService, ApplicationSettings applicationSettings) {
@@ -58,7 +61,7 @@ public class PostDocServiceImpl implements PostDocService {
         for (PostDoc postDoc :
                 postDocs) {
             try {
-                posts.add(postService.getPostById(Long.parseLong(postDoc.getPostId())));
+                posts.add(permaPostService.getPostById(Long.parseLong(postDoc.getPostId())));
             } catch (PostNotFoundException e) {
                 logger.info("Could not convert PostDoc {} to Post with title \"{}\"", postDoc.getPostId(), postDoc.getPostTitle());
             }
@@ -75,7 +78,7 @@ public class PostDocServiceImpl implements PostDocService {
         for (int i = 0; i < applicationSettings.getMoreLikeThisNum(); i++) {
             try {
                 PostDoc postDoc = postDocs.get(i);
-                posts.add(postService.getPostById(Long.parseLong(postDoc.getPostId())));
+                posts.add(permaPostService.getPostById(Long.parseLong(postDoc.getPostId())));
             } catch (PostNotFoundException | IndexOutOfBoundsException e) {
                 if (e.getClass().equals(PostNotFoundException.class))
                     logger.info("MoreLikeThis PostDoc {} to Post with title \"{}\" NOT FOUND", postDocs.get(i).getPostId(), postDocs.get(i).getPostTitle());

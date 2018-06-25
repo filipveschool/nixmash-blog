@@ -129,9 +129,6 @@ public class UserController {
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public String registrationForm(@ModelAttribute UserDTO userDTO, HttpServletRequest request) {
-        if (webUI.isNixMash()) {
-            return "redirect:/";
-        }
 
         if (request.getUserPrincipal() != null)
             return "redirect:/";
@@ -142,10 +139,6 @@ public class UserController {
     @RequestMapping(value = "/register", method = POST)
     public String register(@Valid @ModelAttribute("userDTO") UserDTO userDTO, BindingResult result, WebRequest request,
                            RedirectAttributes redirectAttributes) {
-
-        if (webUI.isNixMash()) {
-            return "redirect:/";
-        }
 
         if (result.hasErrors()) {
             return REGISTER_VIEW;
@@ -209,10 +202,6 @@ public class UserController {
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
     public String signupForm(@ModelAttribute SocialUserDTO socialUserDTO, WebRequest request, Model model) {
 
-        if (webUI.isNixMash()) {
-            return "redirect:/";
-        }
-
         if (request.getUserPrincipal() != null)
             return "redirect:/";
         else {
@@ -236,9 +225,6 @@ public class UserController {
     public String signup(@Valid @ModelAttribute("socialUserDTO") SocialUserDTO socialUserDTO, BindingResult result,
                          WebRequest request, RedirectAttributes redirectAttributes) {
 
-        if (webUI.isNixMash()) {
-            return "redirect:/";
-        }
 
         if (result.hasErrors()) {
             return SIGNUP_VIEW;

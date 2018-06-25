@@ -3,7 +3,6 @@ package com.nixmash.blog.jpa.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.Column;
@@ -12,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -25,7 +25,7 @@ public class Authority implements GrantedAuthority {
     public static final int MIN_LENGTH_AUTHORITY = 4;
 
     @Column
-    @NotEmpty
+    @NotNull
     @Length(min = Authority.MIN_LENGTH_AUTHORITY, max = Authority.MAX_LENGTH_AUTHORITY)
     private String authority;
 

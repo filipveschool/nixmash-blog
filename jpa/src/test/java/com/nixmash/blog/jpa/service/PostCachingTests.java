@@ -3,6 +3,7 @@ package com.nixmash.blog.jpa.service;
 import com.nixmash.blog.jpa.SpringDataTests;
 import com.nixmash.blog.jpa.dto.PostDTO;
 import com.nixmash.blog.jpa.model.Post;
+import com.nixmash.blog.jpa.service.interfaces.PermaPostService;
 import com.nixmash.blog.jpa.service.interfaces.PostService;
 import com.nixmash.blog.jpa.utils.PostTestUtils;
 import com.nixmash.blog.jpa.utils.PostUtils;
@@ -30,6 +31,9 @@ public class PostCachingTests extends SpringDataTests {
     @Autowired
     private PostService postService;
 
+    @Autowired
+    private PermaPostService permaPostService;
+
     private Cache postCache;
     private Cache pagedPostsCache;
 
@@ -48,14 +52,14 @@ public class PostCachingTests extends SpringDataTests {
     @Test
     public void validateCacheByPostId() throws Exception {
         assertThat(postCache.get(1L)).isNull();
-        Post post = postService.getPostById(1L);
+        Post post = permaPostService.getPostById(1L);
         assertThat((Post) postCache.get(post.getPostId()).get()).isEqualTo(post);
     }
 
     @Test
     public void validateCacheByPostName() throws Exception {
         assertThat(postCache.get("a-java-collection-of-value-pairs-tuples")).isNull();
-        Post post = postService.getPost("a-java-collection-of-value-pairs-tuples");
+        Post post = permaPostService.getPost("a-java-collection-of-value-pairs-tuples");
         assertThat((Post) postCache.get(post.getPostName()).get()).isEqualTo(post);
     }
 
@@ -74,8 +78,8 @@ public class PostCachingTests extends SpringDataTests {
         assertNull(postCache.get(post.getPostName()));
         assertNull(postCache.get(postId));
 
-        Post postById = postService.getPostById(postId);
-        Post postByName = postService.getPost(postName);
+        Post postById = permaPostService.getPostById(postId);
+        Post postByName = permaPostService.getPost(postName);
 
         assertThat((Post) postCache.get(postName).get()).isEqualTo(postByName);
         assertThat((Post) postCache.get(postId).get()).isEqualTo(postById);
@@ -92,7 +96,7 @@ public class PostCachingTests extends SpringDataTests {
         // Update Post Title and call Post Update Service
 
         String newTitle = "Something Wonderful";
-        Post post = postService.getPostById(1L);
+        Post post = permaPostService.getPostById(1L);
         String originalPostName = post.getPostName();
         PostDTO postDTO = PostUtils.postToPostDTO(post);
         postDTO.setPostTitle(newTitle);
@@ -103,13 +107,13 @@ public class PostCachingTests extends SpringDataTests {
 
         assertNull(postCache.get(post.getPostName()));
 
-        postService.getPost(originalPostName);
+        permaPostService.getPost(originalPostName);
         Post postByName = (Post) postCache.get(post.getPostName()).get();
         assertThat(postByName.getPostTitle()).isEqualTo(newTitle);
 
         assertNull(postCache.get(post.getPostId()));
 
-        postService.getPostById(1L);
+        permaPostService.getPostById(1L);
         Post postById = (Post) postCache.get(post.getPostId()).get();
         assertThat(postById.getPostTitle()).isEqualTo(newTitle);
 

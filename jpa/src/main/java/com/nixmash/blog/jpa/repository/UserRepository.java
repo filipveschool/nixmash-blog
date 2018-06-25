@@ -16,7 +16,6 @@
 package com.nixmash.blog.jpa.repository;
 
 import com.nixmash.blog.jpa.model.User;
-import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -28,17 +27,17 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
 
-    User findByUsername(String username) throws DataAccessException;
+    User findByUsername(String username);
 
-    Collection<User> findAll() throws DataAccessException;
+    Collection<User> findAll();
 
-    User findById(Long id) throws DataAccessException;
+    User findById(Long id);
 
-    User save(User user) throws DataAccessException;
+    User save(User user);
 
-    void delete(User user) throws DataAccessException;
+    void delete(User user);
 
-    boolean exists(Long userId) throws DataAccessException;
+    boolean exists(Long userId);
 
     @Query("select distinct u from User u left join fetch " +
             "u.authorities left join fetch u.userData p")

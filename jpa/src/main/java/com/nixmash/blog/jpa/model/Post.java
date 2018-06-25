@@ -32,6 +32,8 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -79,13 +81,12 @@ public class Post implements Serializable {
     @Column(name = "post_image", length = MAX_POST_NAME_LENGTH)
     private String postImage;
 
-    @Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
+    // @Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
     @CreatedDate
     @Column(name = "post_date", nullable = false)
     private ZonedDateTime postDate;
 
-
-    @Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
+    //@Type(type = "org.jadira.usertype.dateandtime.threeten.PersistentLocalDateTime")
     @LastModifiedDate
     @Column(name = "post_modified", nullable = false)
     private ZonedDateTime postModified;
@@ -163,7 +164,12 @@ public class Post implements Serializable {
     // endregion
 
     public Post(){
-
+        tags = new HashSet<>();
+        category = new Category();
+        postMeta = new PostMeta();
+        author = new User();
+        postImages = new ArrayList<>();
+        singleImage = new PostImage();
     }
 
     // region method properties
